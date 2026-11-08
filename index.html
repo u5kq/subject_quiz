@@ -244,7 +244,12 @@ button{touch-action:manipulation}
 button:focus-visible,input:focus-visible{outline:3px solid #777f84!important;outline-offset:3px}
 .subject:active,.topic:active,.mode-card:active{transform:scale(.985)}
 </style>
-</head>
+<style id="subject-tap-fix">
+/* Tap reliability: make the whole subject tile an active hit area */
+#subjects{position:relative;z-index:2;pointer-events:auto}
+#subjects .subject{position:relative;z-index:1;pointer-events:auto;cursor:pointer;-webkit-appearance:none;appearance:none}
+#subjects .subject>*{pointer-events:none}
+</style></head>
 <body>
 <div class="app">
 <header><div class="brand"><img class="brand-icon" src="icon.svg" alt="">STUDY / QUIZ</div><h1>9科テスト対策</h1><p>教科・単元を選んで、テスト範囲を確認</p></header>
@@ -469,6 +474,16 @@ function backToDetail(){if(!currentSubject){goHome();return;}openSubject(current
 /* Stable study engine + restored utilities */
 function renderHome(){
  const host=document.getElementById("subjects");if(!host)return;
+ // Attach one delegated handler to the subject grid itself. This survives innerHTML re-renders
+ // and handles taps on the icon, title, description, and count inside each card.
+ host.onclick=function(event){
+  const card=event.target.closest("button.subject[data-subject]");
+  if(!card||!host.contains(card))return;
+  event.preventDefault();
+  event.stopPropagation();
+  openSubject(card.dataset.subject);
+ };
+ host.style.pointerEvents="auto";
  const questions=(()=>{try{return all();}catch(error){return Array.isArray(base)?base:[];}})();
  const total=document.getElementById("totalCount");if(total)total.textContent=questions.length;
  const done=document.getElementById("doneCount");if(done)done.textContent=Object.keys(progress||{}).filter(k=>progress[k]?.tries>0).length;
