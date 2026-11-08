@@ -1,10 +1,11 @@
 {
-  "name": "副教科対策",
-  "short_name": "副教科対策",
+  "name": "9科テスト対策",
+  "short_name": "9科対策",
   "start_url": "./",
+  "scope": "./",
   "display": "standalone",
-  "background_color": "#fffaf0",
-  "theme_color": "#f5d45e",
+  "background_color": "#ffffff",
+  "theme_color": "#111111",
   "icons": [
     {
       "src": "icon.svg",
