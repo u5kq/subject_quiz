@@ -1314,10 +1314,22 @@ function getDistractors(q,count){
 }
 function escText(v){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function revealFlash(){const a=document.getElementById("flashAnswer");a.textContent=queue[idx][3];a.classList.remove("hidden");flashRevealed=true;}
+function buildQuestionExplanation(q){
+ if(typeof q[5]==="string"&&q[5].trim())return q[5].trim();
+ const topic=String(q[1]||"この単元");
+ const question=String(q[2]||"");
+ const answer=String(q[3]||"");
+ const cleanQuestion=question.replace(/[？?。]+$/,"");
+ return "ポイント：「"+topic+"」の学習内容です。問題文の「"+cleanQuestion+"」が何を尋ねているかを確認し、正解の「"+answer+"」とセットで覚えましょう。";
+}
 function recordAnswer(ok,approximate=false){
  const q=queue[idx];answeredCount++;if(ok)correctCount++;
  const counter=document.getElementById("studyCount");if(counter)counter.textContent=(idx+1)+" / "+queue.length+"　・　正解 "+correctCount+" / "+answeredCount;
- const el=document.getElementById("feedback");if(el)el.innerHTML='<div class="feedback '+(ok?'good':'bad')+'">'+(ok?(approximate?'正解！（表現の違いを考慮）':'正解！'):'不正解。答えを確認しよう。')+'<br><b>正解：</b>'+escText(q[3])+'</div>';
+ const el=document.getElementById("feedback");
+ if(el){
+  const explanation=ok?"":'<div class="feedback bad"><b>かんたん解説</b><br>'+escText(buildQuestionExplanation(q))+'</div>';
+  el.innerHTML='<div class="feedback '+(ok?'good':'bad')+'">'+(ok?(approximate?'正解！（表現の違いを考慮）':'正解！'):'不正解。答えを確認しよう。')+'<br><b>正解：</b>'+escText(q[3])+'</div>'+explanation;
+ }
  const n=document.getElementById("nextBtn");if(n)n.disabled=false;
 }
 function chooseOption(i){if(answered)return;answered=true;const ok=window.answerOptions[i]===window.answerCorrect;document.querySelectorAll(".choice").forEach((b,j)=>{b.disabled=true;if(window.answerOptions[j]===window.answerCorrect)b.classList.add("correct");});if(!ok)document.querySelectorAll(".choice")[i].classList.add("wrong");recordAnswer(ok);}
