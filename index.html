@@ -459,7 +459,7 @@ let custom=readStored("副教科_custom",[],Array.isArray);
 let progress=readStored("副教科_progress",{},v=>v&&typeof v==="object"&&!Array.isArray(v));
 
 let currentSubject="",currentTopic="",queue=[],idx=0,mode="",answered=false,flashRevealed=false;
-const all=()=>{const seen=new Set();return base.concat(custom).filter(q=>{const k=key(q);if(seen.has(k))return false;seen.add(k);return true;})};
+const all=()=>{const seen=new Set();return base.concat(Array.isArray(custom)?custom:[]).filter(q=>Array.isArray(q)&&q.length>=4&&q.slice(0,4).every(v=>typeof v==="string")&&q.slice(0,4).every(v=>v.trim().length>0)).filter(q=>{const k=key(q);if(seen.has(k))return false;seen.add(k);return true;})};
 function save(){localStorage.setItem("副教科_custom",JSON.stringify(custom));localStorage.setItem("副教科_progress",JSON.stringify(progress))}
 function show(id){["home","detail","study"].forEach(x=>{const e=document.getElementById(x);if(e)e.classList.toggle("hidden",x!==id)});document.querySelector(".app")?.classList.toggle("is-studying",id==="study") }
 function goHome(){currentSubject="";currentTopic="";show("home");renderHome()}
@@ -476,20 +476,23 @@ function renderHome(){
  const host=document.getElementById("subjects");if(!host)return;
  // Attach one delegated handler to the subject grid itself. This survives innerHTML re-renders
  // and handles taps on the icon, title, description, and count inside each card.
- host.onclick=function(event){
-  const card=event.target.closest("button.subject[data-subject]");
-  if(!card||!host.contains(card))return;
-  event.preventDefault();
-  event.stopPropagation();
-  openSubject(card.dataset.subject);
- };
+ if(!host.dataset.tapHandler){
+  host.addEventListener("click",function(event){
+   const target=event.target instanceof Element?event.target:null;
+   const card=target?target.closest("button.subject[data-subject]"):null;
+   if(!card||!host.contains(card))return;
+   event.preventDefault();
+   openSubject(card.dataset.subject);
+  });
+  host.dataset.tapHandler="1";
+ }
  host.style.pointerEvents="auto";
  const questions=(()=>{try{return all();}catch(error){return Array.isArray(base)?base:[];}})();
  const total=document.getElementById("totalCount");if(total)total.textContent=questions.length;
  const done=document.getElementById("doneCount");if(done)done.textContent=Object.keys(progress||{}).filter(k=>progress[k]?.tries>0).length;
  host.innerHTML=subjects.map(s=>{
   const count=questions.filter(q=>Array.isArray(q)&&q[0]===s.name).length;
-  return '<button type="button" class="subject" data-subject="'+escText(s.name)+'" onclick="openSubject('+arg(s.name)+')"><div class="emoji">'+s.emoji+'</div><h3>'+s.name+'</h3><p>'+s.desc+'</p><div class="count">'+count+' 問収録　→</div></button>';
+  return '<button type="button" class="subject" data-subject="'+escText(s.name)+'"><div class="emoji">'+s.emoji+'</div><h3>'+escText(s.name)+'</h3><p>'+escText(s.desc)+'</p><div class="count">'+count+' 問収録　→</div></button>';
  }).join("");
 }
 function openSubject(name){
