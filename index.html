@@ -718,7 +718,7 @@ function openSubject(name){
  document.getElementById("detailTitle").textContent=name;
  if(name==="技術・家庭"){
   document.getElementById("detailDesc").textContent="学習する分野を選択してください";
-  document.getElementById("topicList").innerHTML=["技術","家庭"].map((v,i)=>'<button class="topic" onclick="openSubjectSection('+arg(v)+')"><span class="topic-index">'+String(i+1).padStart(2,"0")+'</span><span class="topic-main"><b>'+v+'</b><span class="topic-meta">'+all().filter(q=>q[0]===v||q[0]==="技術・家庭").length+'問</span></span><span class="topic-arrow">›</span></button>').join("");
+  document.getElementById("topicList").innerHTML=["技術","家庭"].map((v,i)=>'<button class="topic" onclick="openSubjectSection('+arg(v)+')"><span class="topic-index">'+String(i+1).padStart(2,"0")+'</span><span class="topic-main"><b>'+v+'</b><span class="topic-meta">'+all().filter(q=>q[0]===v).length+'問</span></span><span class="topic-arrow">›</span></button>').join("");
   document.getElementById("multiTopicStage").innerHTML="";document.getElementById("topicList").classList.remove("hidden");document.getElementById("topicStage").classList.remove("hidden");document.getElementById("formatStage").classList.add("hidden");show("detail");return;
  }
  if(name==="社会"){
