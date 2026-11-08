@@ -124,7 +124,7 @@ header h1,.brand{color:#fff!important}
 header p{color:#d0d0d0!important}
 header:after{background:rgba(255,255,255,.055)!important}
 .btn.primary{background:#171717!important;border-color:#171717!important;color:#fff!important}
-</style>
+.count-setting{display:flex;align-items:center;gap:12px;margin:0 0 18px}.count-setting select{max-width:180px}.count-setting small{font-size:12px}</style>
 <style id="readability">
 :root{--bg:#fffdf7;--ink:#242319;--muted:#505148;--line:#ded8c4;--yellow:#f3c943;--dark:#604800;--pale:#fff1b8;--mint:#e4f2e5;--blue:#e8efff;--pink:#ffebe7}
 body{font-size:16px;color:var(--ink);line-height:1.7}.app{max-width:720px;padding:0 18px 40px}
@@ -269,7 +269,7 @@ button:focus-visible,input:focus-visible{outline:3px solid #777f84!important;out
   <div id="formatStage" class="hidden">
    <button class="back" onclick="backToTopics()">← 単元一覧</button>
    <div class="section-head"><h3 id="selectedTopicTitle"></h3><small>03 / FORMAT</small></div>
-   <p class="muted">取り組みたい問題形式を選択。</p><div class="mode-grid" id="modeGrid"></div>
+   <p class="muted">出題する問題数を選択。</p><div class="count-setting"><select id="questionCountSelect" class="field" aria-label="出題問題数"><option value="5">5問</option><option value="10">10問</option><option value="15">15問</option><option value="20" selected>20問</option><option value="30">30問</option><option value="50">50問</option><option value="all">全問</option></select><small id="questionCountHint" class="muted"></small></div><p class="muted">取り組みたい問題形式を選択。</p><div class="mode-grid" id="modeGrid"></div>
   </div>
  </div>
 </section>
@@ -1148,6 +1148,7 @@ function openSocialCategory(category){
  if(!items.length){document.getElementById("topicList").innerHTML='<p class="muted">この分野の問題はまだありません。</p>';document.getElementById("multiTopicStage").innerHTML="";document.getElementById("topicList").classList.remove("hidden");document.getElementById("topicStage").classList.remove("hidden");document.getElementById("formatStage").classList.add("hidden");return;}
  renderTopicButtons(items);
 }
+function selectedQuestionLimit(total){const el=document.getElementById("questionCountSelect");if(!el||el.value==="all")return total;const n=Math.max(1,parseInt(el.value,10)||20);return Math.min(n,total);}
 function selectTopic(topic){
  currentTopic=topic;document.getElementById("selectedTopicTitle").textContent=topic;
  const items=questionsForCurrentBranch().filter(q=>q[1]===topic);
@@ -1166,7 +1167,7 @@ function selectTopic(topic){
  document.getElementById("topicStage").classList.add("hidden");document.getElementById("formatStage").classList.remove("hidden");
 }
 function backToTopics(){currentTopic="";document.getElementById("formatStage").classList.add("hidden");document.getElementById("topicStage").classList.remove("hidden");document.getElementById("topicList").classList.remove("hidden")}
-function launchSelectedTopics(){const selected=[...document.querySelectorAll(".topic-pick:checked")].map(x=>x.value);if(!selected.length){alert("出題したい単元を選んでください。");return;}const items=questionsForCurrentBranch().filter(q=>selected.includes(q[1]));if(!items.length){alert("この単元には問題がありません。");return;}window.quizDistractorPool=items;const possible=items.filter(q=>getDistractors(q,3).length===3);if(!possible.length){alert("4択に必要な選択肢が不足しています。問題を追加してください。");return;}currentTopic=selected.length+"単元ミックス";mode="quiz";window.quizDistractorPool=items;queue=shuffle(possible).slice(0,20);idx=0;correctCount=0;answeredCount=0;show("study");renderStudy();}
+function launchSelectedTopics(){const selected=[...document.querySelectorAll(".topic-pick:checked")].map(x=>x.value);if(!selected.length){alert("出題したい単元を選んでください。");return;}const items=questionsForCurrentBranch().filter(q=>selected.includes(q[1]));if(!items.length){alert("この単元には問題がありません。");return;}window.quizDistractorPool=items;const possible=items.filter(q=>getDistractors(q,3).length===3);if(!possible.length){alert("4択に必要な選択肢が不足しています。問題を追加してください。");return;}currentTopic=selected.length+"単元ミックス";mode="quiz";window.quizDistractorPool=items;queue=shuffle(possible).slice(0,selectedQuestionLimit(possible.length));idx=0;correctCount=0;answeredCount=0;show("study");renderStudy();}
 function launch(sub,topic,kind){
  currentSubject=sub||currentSubject;currentTopic=topic;mode=kind;
  // 分野を選択している間は、その分野の問題だけを出題・選択肢候補に使う。
@@ -1174,7 +1175,7 @@ function launch(sub,topic,kind){
  if(!items.length){alert("この分野・単元には問題がありません。");return;}
  window.quizDistractorPool=items.slice();
  if(kind==="quiz"){items=items.filter(q=>getDistractors(q,3).length===3);if(!items.length){alert("この分野内で4択を作れる問題がまだありません。");return;}}
- queue=shuffle(items);if(kind==="random")queue=queue.slice(0,Math.min(20,queue.length));idx=0;correctCount=0;answeredCount=0;show("study");renderStudy();
+ queue=shuffle(items).slice(0,selectedQuestionLimit(items.length));idx=0;correctCount=0;answeredCount=0;show("study");renderStudy();
 }
 function startQuiz(sub,topic=null,items=null){currentSubject=sub||currentSubject;currentTopic=topic;mode="quiz";queue=shuffle(items||all().filter(q=>q[0]===sub&&(!topic||q[1]===topic)));idx=0;if(!queue.length){alert("問題がありません");return;}show("study");renderStudy();}
 function startFlash(sub,topic=null,items=null){currentSubject=sub||currentSubject;currentTopic=topic;mode="flash";queue=shuffle(items||all().filter(q=>q[0]===sub&&(!topic||q[1]===topic)));idx=0;if(!queue.length){alert("問題がありません");return;}show("study");renderStudy();}
