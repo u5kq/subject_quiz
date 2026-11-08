@@ -414,7 +414,8 @@ function answerSimilarity(a,b){
  return same/Math.max(x.length,y.length);
 }
 function getDistractors(q,count){
- const source=Array.isArray(window.quizDistractorPool)?window.quizDistractorPool:all();\n const pool=source.filter(x=>x[0]===q[0]&&x[2]!==q[2]&&x[3]!==q[3]);
+ const source=Array.isArray(window.quizDistractorPool)?window.quizDistractorPool:all();
+ const pool=source.filter(x=>x[0]===q[0]&&x[2]!==q[2]&&x[3]!==q[3]);
  const unique=[],seen=new Set([String(q[3]).normalize("NFKC").replace(/\\s/g,"")]);
  for(const x of pool){const a=String(x[3]).trim(),k=a.normalize("NFKC").replace(/\\s/g,"");if(!a||seen.has(k))continue;seen.add(k);unique.push(x);}
  const sameTopic=shuffle(unique.filter(x=>x[1]===q[1]));
