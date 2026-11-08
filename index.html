@@ -641,7 +641,7 @@ function renderHome(){
  const total=document.getElementById("totalCount");if(total)total.textContent=questions.length;
  const done=document.getElementById("doneCount");if(done)done.textContent=Object.keys(progress||{}).filter(k=>progress[k]?.tries>0).length;
  host.innerHTML=subjects.map(s=>{
-  const count=questions.filter(q=>Array.isArray(q)&&q[0]===s.name).length;
+  const count=questions.filter(q=>Array.isArray(q)&&(q[0]===s.name||(s.name==="技術・家庭"&&(q[0]==="技術"||q[0]==="家庭")))).length;
   return '<button type="button" class="subject" data-subject="'+escText(s.name)+'"><div class="emoji">'+s.emoji+'</div><h3>'+escText(s.name)+'</h3><p>'+escText(s.desc)+'</p><div class="count">'+count+' 問収録　→</div></button>';
  }).join("");
 }
