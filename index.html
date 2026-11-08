@@ -169,7 +169,7 @@ button:focus-visible,input:focus-visible{outline:3px solid #8b6900;outline-offse
 @media(prefers-reduced-motion:no-preference){.subject,.topic,.mode-card{transition:transform .14s ease,border-color .14s ease,box-shadow .14s ease}.subject:hover{transform:translateY(-2px);box-shadow:0 5px 14px rgba(30,30,20,.07)}}
 
 </style>
-<meta name="theme-color" content="#f5d45e">
+<meta name="theme-color" content="#111111">
 <meta name="description" content="副教科の知識を楽しく学べるクイズ学習アプリ">
 <link rel="icon" type="image/svg+xml" href="icon.svg">
 <link rel="apple-touch-icon" href="icon.svg">
@@ -199,7 +199,52 @@ button:focus-visible,input:focus-visible{outline:3px solid #8b6900;outline-offse
 .choices{display:grid;grid-template-columns:1fr!important;gap:10px}
 .choice{display:grid!important;grid-template-columns:34px minmax(0,1fr)!important;align-items:center!important;min-height:60px;text-align:left;line-height:1.5;white-space:normal}
 @media(min-width:600px){.subjects{grid-template-columns:repeat(3,minmax(0,1fr))}}
-</style></head>
+</style><style id="final-unified-design">
+/* FINAL DESIGN — unified monochrome interface with muted subject accents */
+:root{
+ --bg:#f4f5f5;--paper:#fff;--ink:#202326;--muted:#62686d;--line:#e1e4e5;
+ --yellow:#17191c;--yellow-deep:#090a0b;--dark:#17191c;--pale:#eef0f1;
+ --mint:#edf2ee;--blue:#edf0f4;--pink:#f4eeee;--shadow:0 3px 12px rgba(18,20,22,.045);
+}
+html,body{background:#f4f5f5!important;color:#202326!important}
+header{background:linear-gradient(135deg,#111315 0%,#292d31 100%)!important;box-shadow:0 8px 22px rgba(0,0,0,.10)!important;border:0!important}
+header h1,.brand{color:#fff!important}header p{color:#d5d8da!important}
+.section-head small,.card-label{color:#666d72!important}
+.panel,.subject,.topic,.mode-card,.multi-topic-stage,.recap{background:#fff!important;border-color:#e1e4e5!important;box-shadow:0 2px 9px rgba(0,0,0,.035)!important}
+.subject{border-top:4px solid var(--subject-color)!important;color:#202326!important;cursor:pointer!important;pointer-events:auto!important;position:relative;z-index:1}
+.subject h3,.topic b,.mode-copy b{color:#24282b!important}
+.subject p,.topic-meta,.mode-copy small,.muted{color:#62686d!important}
+.subject .emoji{background:var(--subject-soft)!important;color:var(--subject-ink)!important;border:0!important;filter:none!important}
+.subject .count{color:var(--subject-ink)!important}
+.subject:nth-child(1){--subject-color:#9b7773;--subject-soft:#f3eceb;--subject-ink:#70504c}
+.subject:nth-child(2){--subject-color:#7188aa;--subject-soft:#edf0f5;--subject-ink:#465c7d}
+.subject:nth-child(3){--subject-color:#6c9993;--subject-soft:#edf3f2;--subject-ink:#416d67}
+.subject:nth-child(4){--subject-color:#81977a;--subject-soft:#eff2ed;--subject-ink:#53694d}
+.subject:nth-child(5){--subject-color:#a88a6e;--subject-soft:#f3efea;--subject-ink:#725b43}
+.subject:nth-child(6){--subject-color:#73917d;--subject-soft:#edf2ee;--subject-ink:#496553}
+.subject:nth-child(7){--subject-color:#71899a;--subject-soft:#edf1f3;--subject-ink:#4a6373}
+.subject:nth-child(8){--subject-color:#9183a3;--subject-soft:#f0eef3;--subject-ink:#645773}
+.subject:nth-child(9){--subject-color:#a28d65;--subject-soft:#f3f0e9;--subject-ink:#75613e}
+.back,.btn.soft{background:#eef0f1!important;border-color:#dfe2e3!important;color:#292d30!important}
+.btn.primary{background:#17191c!important;border-color:#17191c!important;color:#fff!important}
+.progress{background:#e7e9e9!important}.progress i,.topic-progress i{background:#41474b!important}
+.topic{border-left:4px solid var(--topic-color,#7d858a)!important}
+.topic-index,.mode-icon{background:#eff1f2!important;color:#343a3e!important}
+.topic-arrow,.mode-arrow{color:#737a7f!important}
+.mode-card.mode-featured{border-color:#bfc4c6!important;background:#fafbfb!important}
+.answer{background:#eff1f2!important;border-color:#dfe2e3!important;color:#24282b!important}
+.choice{background:#fff!important;border-color:#d9dddf!important;color:#24282b!important}
+.choice .choice-letter{background:#eff1f2!important;color:#343a3e!important}
+.choice.correct,.feedback.good{background:#edf2ee!important;border-color:#a9b8ac!important;color:#304b37!important}
+.choice.wrong,.feedback.bad{background:#f4eeee!important;border-color:#c8aaaa!important;color:#633d3d!important}
+.multi-topic-option{background:#fff!important;border-color:#e1e4e5!important}
+.multi-topic-option input{accent-color:#292d30!important}
+.recap li{border-color:#e5e7e8!important}.recap li span{color:#62686d!important}
+button{touch-action:manipulation}
+button:focus-visible,input:focus-visible{outline:3px solid #777f84!important;outline-offset:3px}
+.subject:active,.topic:active,.mode-card:active{transform:scale(.985)}
+</style>
+</head>
 <body>
 <div class="app">
 <header><div class="brand"><img class="brand-icon" src="icon.svg" alt="">STUDY / QUIZ</div><h1>9科テスト対策</h1><p>教科・単元を選んで、テスト範囲を確認</p></header>
@@ -419,13 +464,7 @@ function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.fl
 function backToDetail(){if(!currentSubject){goHome();return;}openSubject(currentSubject);if(currentTopic)selectTopic(currentTopic)}
 
 
-// Reliable subject-button click delegation (also works on nested icon/text taps).
-document.addEventListener("click",function(event){
- const card=event.target.closest("#subjects button.subject[data-subject]");
- if(!card)return;
- event.preventDefault();
- openSubject(card.dataset.subject);
-},true);
+// Subject cards use explicit onclick handlers rendered by renderHome().
 
 /* Stable study engine + restored utilities */
 function renderHome(){
@@ -435,7 +474,7 @@ function renderHome(){
  const done=document.getElementById("doneCount");if(done)done.textContent=Object.keys(progress||{}).filter(k=>progress[k]?.tries>0).length;
  host.innerHTML=subjects.map(s=>{
   const count=questions.filter(q=>Array.isArray(q)&&q[0]===s.name).length;
-  return '<button type="button" class="subject" data-subject="'+escText(s.name)+'"><div class="emoji">'+s.emoji+'</div><h3>'+s.name+'</h3><p>'+s.desc+'</p><div class="count">'+count+' 問収録　→</div></button>';
+  return '<button type="button" class="subject" data-subject="'+escText(s.name)+'" onclick="openSubject('+arg(s.name)+')"><div class="emoji">'+s.emoji+'</div><h3>'+s.name+'</h3><p>'+s.desc+'</p><div class="count">'+count+' 問収録　→</div></button>';
  }).join("");
 }
 function openSubject(name){
