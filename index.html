@@ -49,7 +49,7 @@ label.muted{display:block;margin-top:7px}
 <div class="app">
 <header><div class="brand"><span class="brand-mark">Q</span>副教科 QUIZ</div><div class="header-note">いつでも使える学習ツール</div></header>
 <main id="home">
-<section class="hero"><div class="eyebrow">STUDY / PRACTICE / REVIEW</div><h1>わかるまで、何度でも。</h1><p>教科・単元を選んで、問題形式を変えながら学習。定期テストにも日々の復習にも使えます。</p></section>
+<div class="section-head" style="margin-top:8px"><h2>教科を選択</h2></div>
 <div class="section-head"><h2>教科から学習する</h2><small>SUBJECTS</small></div>
 <div class="subjects" id="subjects"></div><div class="toolbar" style="margin-top:16px"><button class="btn soft" onclick="startWeak()">☆ 苦手を復習</button><button class="btn" onclick="openCustom()">問題を追加・管理</button><button class="btn" onclick="exportData()">保存</button><label class="btn file-label">復元<input type="file" accept="application/json" onchange="importData(event)" hidden></label></div>
 </main>
