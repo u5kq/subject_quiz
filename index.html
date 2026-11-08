@@ -57,7 +57,7 @@ header p{position:relative;z-index:1;margin:0;color:#79652b;font-size:12px;font-
 .btn.primary{background:var(--yellow);border-color:#e8c64e;color:#4d3a08}.btn.soft{background:var(--pale);border-color:#f1e2b4;color:var(--dark)}
 .question{font-size:clamp(21px,5vw,27px);font-weight:900;letter-spacing:.015em;line-height:1.55;margin:20px 0;overflow-wrap:anywhere}
 .answer{background:#fff7d8;border:1px solid #f1dfa0;border-radius:16px;padding:16px;margin:14px 0;white-space:pre-wrap;line-height:1.9;font-size:15px;font-weight:600}
-.choices{display:grid;gap:10px}.choice{width:100%;border:1.5px solid var(--line);border-radius:15px;background:#fff;padding:14px 15px;text-align:left;min-height:56px;font-size:14px;font-weight:600;line-height:1.65}
+.option-note{margin:0 0 8px;font-size:11px}.choices{display:grid;gap:10px}.choice{width:100%;border:1.5px solid var(--line);border-radius:15px;background:#fff;padding:14px 15px;text-align:left;min-height:56px;font-size:14px;font-weight:600;line-height:1.65}
 .choice:disabled{cursor:default}.choice.correct{background:var(--mint);border-color:#91c5a0}.choice.wrong{background:var(--pink);border-color:#e2a49a}
 .feedback{padding:14px;border-radius:14px;margin-top:13px;font-size:13px;font-weight:600}.feedback.good{background:var(--mint);color:#28633b}.feedback.bad{background:var(--pink);color:#8d3c32}
 .toolbar{display:flex;flex-wrap:wrap;gap:9px;margin:15px 0}.field{display:block;width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;margin:8px 0 13px;background:#fff}
@@ -313,13 +313,13 @@ function renderStudy(){
  let actual=mode;if(mode==="mix")actual=shuffle(["quiz","tf","fill","flash"])[0];
  if(actual==="flash"){body.innerHTML='<div id="flashAnswer" class="answer hidden"></div><button class="btn primary" onclick="revealFlash()">答えを見る</button>';tools.insertAdjacentHTML("beforeend",'<button class="btn" onclick="next()">次の問題 →</button>');return;}
  if(actual==="quiz"){
-  const distractors=shuffle(all().filter(x=>x[0]===q[0]&&x[2]!==q[2]&&x[3]!==q[3])).slice(0,3).map(x=>x[3]);
-  let opts=shuffle([q[3],...distractors]);const fillers=["該当しない","どれも正しくない","別の内容"];
-  while(opts.length<4)opts.push(fillers[opts.length-1]||"該当しない");opts=opts.slice(0,4);
+  const distractors=getDistractors(q,3);
+  const opts=shuffle([q[3],...distractors]);
   window.answerOptions=opts;window.answerCorrect=q[3];
   body.innerHTML='<div class="choices">'+opts.map((o,i)=>'<button class="choice" onclick="chooseOption('+i+')">'+["A","B","C","D"][i]+'　'+escText(o)+'</button>').join("")+'</div><div id="feedback"></div>';
+  if(opts.length<4)body.insertAdjacentHTML("afterbegin",'<p class="muted option-note">この単元の問題数に合わせて選択肢を調整しています。</p>');
  }else if(actual==="tf"){
-  const falseItem=shuffle(all().filter(x=>x[0]===q[0]&&x[2]!==q[2]&&x[3]!==q[3]))[0];
+  const falseItem=getDistractors(q,1)[0];
   window.tfCorrect=!falseItem||Math.random()<.5;
   window.tfStatement=window.tfCorrect?q[3]:falseItem[3];
   body.innerHTML='<div class="answer">次の説明は正しい？<br><b>'+escText(window.tfStatement)+'</b></div><div class="choices"><button class="choice" onclick="answerTF(true)">○ 正しい</button><button class="choice" onclick="answerTF(false)">× ちがう</button></div><div id="feedback"></div>';
@@ -328,6 +328,25 @@ function renderStudy(){
   document.getElementById("fillInput").addEventListener("keydown",e=>{if(e.key==="Enter")checkFill();});
  }
  tools.insertAdjacentHTML("beforeend",'<button class="btn" id="nextBtn" disabled onclick="next()">次の問題 →</button>');
+}
+function answerSimilarity(a,b){
+ const norm=x=>String(x).normalize("NFKC").toLowerCase().replace(/[\\s、。，．・「」『』（）()【】［］:：;；!?！？]/g,"");
+ const x=norm(a),y=norm(b);if(!x||!y)return 0;
+ const short=x.length<y.length?x:y,long=x.length<y.length?y:x;
+ if(long.includes(short))return short.length/long.length;
+ const set=new Set([...x]);let same=0;for(const c of new Set([...y]))if(set.has(c))same++;
+ return same/Math.max(x.length,y.length);
+}
+function getDistractors(q,count){
+ const pool=all().filter(x=>x[0]===q[0]&&x[2]!==q[2]&&x[3]!==q[3]);
+ const unique=[],seen=new Set([String(q[3]).normalize("NFKC").replace(/\\s/g,"")]);
+ for(const x of pool){const a=String(x[3]).trim(),k=a.normalize("NFKC").replace(/\\s/g,"");if(!a||seen.has(k))continue;seen.add(k);unique.push(x);}
+ const sameTopic=shuffle(unique.filter(x=>x[1]===q[1]));
+ const otherTopic=shuffle(unique.filter(x=>x[1]!==q[1]));
+ const sortByLength=(arr)=>arr.sort((a,b)=>Math.abs(String(a[3]).length-String(q[3]).length)-Math.abs(String(b[3]).length-String(q[3]).length));
+ let selected=sortByLength(sameTopic).slice(0,count);
+ if(selected.length<count)selected=selected.concat(sortByLength(otherTopic).slice(0,count-selected.length));
+ return selected.map(x=>x[3]);
 }
 function escText(v){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function revealFlash(){const a=document.getElementById("flashAnswer");a.textContent=queue[idx][3];a.classList.remove("hidden");flashRevealed=true;}
