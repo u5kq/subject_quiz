@@ -284,7 +284,7 @@ button:focus-visible,input:focus-visible{outline:3px solid #777f84!important;out
 <script>
 
 const subjects=[
- {name:"国語",emoji:"📖",desc:"故郷・奥の細道・言葉の知識",topics:["夏草・奥の細道","慣用句・ことわざ・故事成語","故郷","数学"]},
+ {name:"国語",emoji:"📖",desc:"故郷・奥の細道・言葉の知識",topics:["夏草・奥の細道","慣用句・ことわざ・故事成語","故郷"]},
  {name:"数学",emoji:"📐",desc:"二次方程式・関数・相似",topics:["二次方程式","相似・図形・既習内容","関数 y=ax²"]},
  {name:"英語",emoji:"A",desc:"文法・英単語・Let’s Read2",topics:["Let's Read2","受動態","文化・ブロードウェイを見に行こう！","現在完了","重要英単語・意味","関係代名詞・分詞・既習文法"]},
  {name:"理科",emoji:"🔬",desc:"生命の連続性・イオン",topics:["化学変化とイオン","生命の連続性・遺伝","運動と力・圧力"]},
@@ -1103,8 +1103,12 @@ function openSubjectSection(branch){
 }
 function socialCategoryMatches(q,category){
  const topic=String(q[1]||"");
- const prefixes={地理:["地理・"],歴史:["歴史・","第二次世界大戦と日本","戦後の日本と世界"],公民:["公民・","現代社会・日本国憲法"]};
- return (prefixes[category]||[]).some(prefix=>topic.startsWith(prefix));
+ const prefixes={地理:["地理・"],歴史:["歴史・"],公民:["公民・"]};
+ const merged={
+  歴史:["第二次世界大戦と日本","戦後の日本と世界","昭和時代"],
+  公民:["日本国憲法","国会・内閣・裁判所と三権分立","人権と共生社会"]
+ };
+ return (prefixes[category]||[]).some(prefix=>topic.startsWith(prefix))||(merged[category]||[]).includes(topic);
 }
 function questionsForCurrentBranch(){
  const data=all();
