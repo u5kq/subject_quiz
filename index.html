@@ -794,7 +794,7 @@ function selectTopic(topic){
  currentTopic=topic;document.getElementById("selectedTopicTitle").textContent=topic;
  const items=questionsForCurrentBranch().filter(q=>q[1]===topic);
  const coreSubjects=["国語","数学","英語","理科","社会"];
- const isCore=coreSubjects.includes(currentSubject);
+ const isCore=coreSubjects.includes(currentSubject)||currentParentSubject==="社会";
  const modes=isCore
  ? [["quiz","4択暗記","A","正しい答えを4つの選択肢から選ぶ","暗記・知識定着に集中"]]
  : [
@@ -810,9 +810,12 @@ function selectTopic(topic){
 function backToTopics(){currentTopic="";document.getElementById("formatStage").classList.add("hidden");document.getElementById("topicStage").classList.remove("hidden");document.getElementById("topicList").classList.remove("hidden")}
 function launchSelectedTopics(){const selected=[...document.querySelectorAll(".topic-pick:checked")].map(x=>x.value);if(!selected.length){alert("出題したい単元を選んでください。");return;}const items=questionsForCurrentBranch().filter(q=>selected.includes(q[1]));if(!items.length){alert("この単元には問題がありません。");return;}window.quizDistractorPool=items;const possible=items.filter(q=>getDistractors(q,3).length===3);if(!possible.length){alert("4択に必要な選択肢が不足しています。問題を追加してください。");return;}currentTopic=selected.length+"単元ミックス";mode="quiz";window.quizDistractorPool=items;queue=shuffle(possible).slice(0,20);idx=0;correctCount=0;answeredCount=0;show("study");renderStudy();}
 function launch(sub,topic,kind){
- window.quizDistractorPool=null;currentSubject=sub||currentSubject;currentTopic=topic;mode=kind;
- let items=questionsForCurrentBranch().filter(q=>(!topic||q[1]===topic));if(!items.length){alert("この条件の問題はまだありません。");return;}
- if(kind==="quiz"){window.quizDistractorPool=items;items=items.filter(q=>getDistractors(q,3).length===3);if(!items.length){alert("4択に必要な選択肢が不足しています。");return;}}
+ currentSubject=sub||currentSubject;currentTopic=topic;mode=kind;
+ // 分野を選択している間は、その分野の問題だけを出題・選択肢候補に使う。
+ let items=questionsForCurrentBranch().filter(q=>(!topic||q[1]===topic));
+ if(!items.length){alert("この分野・単元には問題がありません。");return;}
+ window.quizDistractorPool=items.slice();
+ if(kind==="quiz"){items=items.filter(q=>getDistractors(q,3).length===3);if(!items.length){alert("この分野内で4択を作れる問題がまだありません。");return;}}
  queue=shuffle(items);if(kind==="random")queue=queue.slice(0,Math.min(20,queue.length));idx=0;correctCount=0;answeredCount=0;show("study");renderStudy();
 }
 function startQuiz(sub,topic=null,items=null){currentSubject=sub||currentSubject;currentTopic=topic;mode="quiz";queue=shuffle(items||all().filter(q=>q[0]===sub&&(!topic||q[1]===topic)));idx=0;if(!queue.length){alert("問題がありません");return;}show("study");renderStudy();}
