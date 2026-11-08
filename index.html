@@ -910,18 +910,40 @@ function answerSimilarity(a,b){
  const set=new Set([...x]);let same=0;for(const c of new Set([...y]))if(set.has(c))same++;
  return same/Math.max(x.length,y.length);
 }
+function quizQuestionKind(q){
+ const p=String(q[2]||"");
+ if(/何年|何月|年月日|いつ|年代|年号/.test(p))return "date";
+ if(/誰|だれ|人物|作者|作曲者/.test(p))return "person";
+ if(/どこ|場所|所在地/.test(p))return "place";
+ if(/何％|何割|何分の|何倍|何個|何人|何問|何点/.test(p))return "number";
+ if(/意味|どういう意味|何を表す/.test(p))return "meaning";
+ if(/特徴|どのような|どのように|役割|働き|目的|方法|仕組み|理由|なぜ/.test(p))return "explanation";
+ if(/何という|何と|名称|何の名前|何と呼ぶ/.test(p))return "term";
+ if(/正しい|適切|当てはまる|選び/.test(p))return "selection";
+ return "general";
+}
+function quizAnswerKind(q){
+ const a=String(q[3]||"").trim();
+ if(/^\\d{4}年?([0-9月日年月]*)$/.test(a)||/^\\d{4}年\\d{1,2}月\\d{1,2}日$/.test(a))return "date";
+ if(/^\\d+(％|%|割|分の|倍|個|人|回|点|時間|分|円|ドル)/.test(a))return "number";
+ if(/^[A-Za-z][A-Za-z -]*$/.test(a))return a.includes(" ")?"english_phrase":"english_word";
+ if(a.length<=8&&!/[。、「」]/.test(a))return "short_term";
+ if(a.length>=18)return "definition";
+ return "phrase";
+}
 function getDistractors(q,count){
- if(Array.isArray(q[4]))return shuffle(q[4].slice()).slice(0,count);
+ if(Array.isArray(q[4]))return shuffle(q[4].slice()).filter(x=>String(x).trim()!==String(q[3]).trim()).slice(0,count);
  const source=Array.isArray(window.quizDistractorPool)?window.quizDistractorPool:all();
- const pool=source.filter(x=>x[0]===q[0]&&x[2]!==q[2]&&x[3]!==q[3]);
+ const kind=quizQuestionKind(q),answerKind=quizAnswerKind(q);
+ const pool=source.filter(x=>x[0]===q[0]&&x[2]!==q[2]&&x[3]!==q[3]&&quizQuestionKind(x)===kind&&quizAnswerKind(x)===answerKind);
  const unique=[],seen=new Set([String(q[3]).normalize("NFKC").replace(/\\s/g,"")]);
  for(const x of pool){const a=String(x[3]).trim(),k=a.normalize("NFKC").replace(/\\s/g,"");if(!a||seen.has(k))continue;seen.add(k);unique.push(x);}
  const sameTopic=shuffle(unique.filter(x=>x[1]===q[1]));
- const otherTopic=shuffle(unique.filter(x=>x[1]!==q[1]));
- const sortByLength=(arr)=>arr.sort((a,b)=>Math.abs(String(a[3]).length-String(q[3]).length)-Math.abs(String(b[3]).length-String(q[3]).length));
+ const otherTopics=shuffle(unique.filter(x=>x[1]!==q[1]));
+ const sortByLength=arr=>arr.sort((a,b)=>Math.abs(String(a[3]).length-String(q[3]).length)-Math.abs(String(b[3]).length-String(q[3]).length));
  let selected=sortByLength(sameTopic).slice(0,count);
- if(selected.length<count)selected=selected.concat(sortByLength(otherTopic).slice(0,count-selected.length));
- return selected.map(x=>x[3]);
+ if(selected.length<count)selected=selected.concat(sortByLength(otherTopics).slice(0,count-selected.length));
+ return selected.length===count?selected.map(x=>x[3]):[];
 }
 function escText(v){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function revealFlash(){const a=document.getElementById("flashAnswer");a.textContent=queue[idx][3];a.classList.remove("hidden");flashRevealed=true;}
