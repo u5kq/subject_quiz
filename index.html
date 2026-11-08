@@ -30,7 +30,7 @@ header p{position:relative;z-index:1;margin:0;color:#79652b;font-size:12px;font-
 .subject h3{font-size:16px;font-weight:900;letter-spacing:.035em;margin:11px 0 2px}
 .subject p{font-size:11px;font-weight:500;color:var(--muted);margin:0}
 .subject .count{font-size:11px;color:#8a6a13;font-weight:800;margin-top:9px}
-.panel{background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:23px;padding:20px;margin:12px 0;box-shadow:var(--shadow)}
+.home-lead{margin:-5px 1px 15px}.panel{background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:23px;padding:20px;margin:12px 0;box-shadow:var(--shadow)}
 .back{border:1px solid #f0dfaa;background:#fff7d9;color:#765d17;font-weight:800;font-size:12px;padding:10px 14px;border-radius:12px;margin:0 0 13px}
 #detailTitle{font-size:26px;font-weight:900;letter-spacing:.04em;margin:5px 0}
 .muted{font-size:13px;color:var(--muted);line-height:1.8;font-weight:500}
@@ -81,9 +81,32 @@ button:focus-visible,input:focus-visible{outline:3px solid #8b6900;outline-offse
 <body>
 <div class="app">
 <header><div class="brand"><span class="brand-mark">Q</span>STUDY / QUIZ</div><h1>副教科対策</h1><p>中学3年・定期テスト対策</p></header>
-<main id="home"><div class="section-head"><h2>教科を選択</h2><small>STEP 1</small></div><div class="subjects" id="subjects"></div></main>
-<section id="detail" class="hidden"><button class="back" onclick="goHome()">← 教科選択に戻る</button><div class="panel"><div class="card-label">STEP 2 / UNIT</div><h2 id="detailTitle"></h2><p class="muted" id="detailDesc"></p><div class="progress"><i id="subjectProgress"></i></div><div class="section-head"><h3>単元を選択</h3></div><div class="topic-list" id="topicList"></div><div id="formatStage" class="hidden"><button class="back" onclick="backToTopics()">← 単元選択に戻る</button><div class="section-head"><h3 id="selectedTopicTitle"></h3><small>STEP 3 / FORMAT</small></div><p class="muted">問題形式を選んでスタート。</p><div class="mode-grid" id="modeGrid"></div></div></div></section>
-<section id="study" class="hidden"><button class="back" onclick="backToDetail()">← 戻る</button><div class="panel"><div class="card-label" id="studyMode">PRACTICE</div><div class="muted" id="studyCount"></div><div class="progress"><i id="studyProgress"></i></div><div class="question" id="prompt"></div><div id="studyBody"></div><div class="toolbar" id="studyTools"></div></div></section>
+<main id="home" aria-label="教科選択">
+ <div class="section-head"><h2>学習する教科</h2><small>01 / SUBJECT</small></div>
+ <p class="muted home-lead">教科を選ぶと、単元と出題形式を選択できます。</p>
+ <div class="subjects" id="subjects"></div>
+</main>
+<section id="detail" class="hidden" aria-label="単元と出題形式">
+ <button class="back" onclick="goHome()">← 教科選択</button>
+ <div class="panel">
+  <div class="card-label">02 / UNIT</div><h2 id="detailTitle"></h2><p class="muted" id="detailDesc"></p>
+  <div class="progress"><i id="subjectProgress"></i></div>
+  <div id="topicStage"><div class="section-head"><h3>単元を選ぶ</h3><small>UNIT</small></div><div class="topic-list" id="topicList"></div></div>
+  <div id="formatStage" class="hidden">
+   <button class="back" onclick="backToTopics()">← 単元一覧</button>
+   <div class="section-head"><h3 id="selectedTopicTitle"></h3><small>03 / FORMAT</small></div>
+   <p class="muted">取り組みたい問題形式を選択。</p><div class="mode-grid" id="modeGrid"></div>
+  </div>
+ </div>
+</section>
+<section id="study" class="hidden" aria-label="問題演習">
+ <button class="back" onclick="backToDetail()">← 出題形式に戻る</button>
+ <div class="panel">
+  <div class="card-label" id="studyMode">PRACTICE</div><div class="muted" id="studyCount"></div>
+  <div class="progress"><i id="studyProgress"></i></div>
+  <div class="question" id="prompt"></div><div id="studyBody"></div><div class="toolbar" id="studyTools"></div>
+ </div>
+</section>
 </div>
 <script>
 
@@ -212,11 +235,11 @@ let currentSubject="",currentTopic="",queue=[],idx=0,mode="",answered=false,flas
 const all=()=>base.concat(custom);
 function save(){localStorage.setItem("副教科_custom",JSON.stringify(custom));localStorage.setItem("副教科_progress",JSON.stringify(progress));localStorage.setItem("副教科_weak",JSON.stringify(weak))}
 function show(id){["home","detail","study"].forEach(x=>{const e=document.getElementById(x);if(e)e.classList.toggle("hidden",x!==id)})}
-function goHome(){show("home");renderHome()}
+function goHome(){currentSubject="";currentTopic="";show("home");renderHome()}
 function key(q){return q[0]+"|"+q[1]+"|"+q[2]}
 function arg(v){return JSON.stringify(String(v)).replace(/"/g,"&quot;")}
 function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b}
-function backToDetail(){if(currentSubject)openSubject(currentSubject);else goHome()}
+function backToDetail(){if(!currentSubject){goHome();return;}openSubject(currentSubject);if(currentTopic)selectTopic(currentTopic)}
 
 /* Stable study engine + restored utilities */
 function renderHome(){
@@ -235,6 +258,7 @@ function openSubject(name){
  const topics=[...new Set(items.map(q=>q[1]))];
  document.getElementById("topicList").innerHTML=topics.map(t=>'<button class="topic" onclick="selectTopic('+arg(t)+')"><div><b>'+escText(t)+'</b><span>'+items.filter(q=>q[1]===t).length+'問</span></div><span class="arrow">›</span></button>').join("");
  document.getElementById("topicList").classList.remove("hidden");
+ document.getElementById("topicStage").classList.remove("hidden");
  document.getElementById("formatStage").classList.add("hidden");
  show("detail");
 }
@@ -250,9 +274,9 @@ function selectTopic(topic){
  ["weak","苦手復習","↺","間違えた問題を中心に解き直す",weak.filter(k=>items.some(q=>key(q)===k)).length+"問"]
  ];
  document.getElementById("modeGrid").innerHTML=modes.map((m,i)=>'<button class="mode-card '+(i===0?'mode-featured':'')+'" onclick="launch('+arg(currentSubject)+','+arg(topic)+','+arg(m[0])+')"><span class="mode-icon">'+m[2]+'</span><span class="mode-copy"><b>'+m[1]+'</b><small>'+m[3]+'</small><em>'+m[4]+'</em></span><span class="mode-arrow">›</span></button>').join("");
- document.getElementById("topicList").classList.add("hidden");document.getElementById("formatStage").classList.remove("hidden");
+ document.getElementById("topicStage").classList.add("hidden");document.getElementById("formatStage").classList.remove("hidden");
 }
-function backToTopics(){document.getElementById("formatStage").classList.add("hidden");document.getElementById("topicList").classList.remove("hidden")}
+function backToTopics(){currentTopic="";document.getElementById("formatStage").classList.add("hidden");document.getElementById("topicStage").classList.remove("hidden");document.getElementById("topicList").classList.remove("hidden")}
 function launch(sub,topic,kind){
  currentSubject=sub||currentSubject;currentTopic=topic;mode=kind;
  let items=all().filter(q=>(!sub||q[0]===sub)&&(!topic||q[1]===topic));
@@ -323,15 +347,8 @@ function checkFill(){
  const close=expected.length>=8&&given.length>=8&&score.coverage>=.78&&score.precision>=.68&&score.dice>=.74;
  const ok=exact||close;answered=true;recordAnswer(ok,close&&!exact);
 }
-function markWeak(){const k=key(queue[idx]);if(!weak.includes(k)){weak.push(k);save();}const b=document.querySelector("#studyTools .soft");if(b)b.textContent="✓ 苦手登録済み";}
-function next(){idx++;renderStudy();}
-
-function openCustom(){show("custom");renderCustom()}
-function addCustom(){let s=document.getElementById("cSubject").value,t=document.getElementById("cTopic").value.trim(),q=document.getElementById("cQ").value.trim(),a=document.getElementById("cA").value.trim();if(!t||!q||!a){document.getElementById("customMsg").textContent="単元名・問題・答えをすべて入力してください。";return}custom.push([s,t,q,a]);save();["cTopic","cQ","cA"].forEach(id=>document.getElementById(id).value="");document.getElementById("customMsg").textContent="追加しました！";renderCustom();renderHome()}
-function renderCustom(){let el=document.getElementById("customList");el.innerHTML=custom.length?custom.map((q,i)=>`<div class="topic"><div><b>${q[2]}</b><div class="muted">${q[0]} / ${q[1]}</div></div><button class="btn danger" onclick="deleteCustom(${i})">削除</button></div>`).join(""):'<div class="empty">追加した問題はまだありません。</div>'}
-function deleteCustom(i){if(confirm("この問題を削除しますか？")){custom.splice(i,1);save();renderCustom();renderHome()}}
-function exportData(){let data={app:"副教科 TEST LAB",version:1,custom,progress,weak};let blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});let a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="副教科_TEST_LAB_backup.json";a.click();URL.revokeObjectURL(a.href)}
-function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let d=JSON.parse(r.result);if(!Array.isArray(d.custom)||!d.progress||!Array.isArray(d.weak))throw Error();if(!confirm("現在の学習データをバックアップ内容で置き換えますか？"))return;custom=d.custom;progress=d.progress;weak=d.weak;save();renderHome();alert("復元しました！")}catch(err){alert("読み込めませんでした。副教科 TEST LAB のバックアップJSONを選んでください。")}};r.readAsText(f);e.target.value=""}
+function next(){if(answered||mode==="flash"){}idx++;renderStudy();}
+renderHome();alert("復元しました！")}catch(err){alert("読み込めませんでした。副教科 TEST LAB のバックアップJSONを選んでください。")}};r.readAsText(f);e.target.value=""}
 renderHome();
 </script>
 </body></html>
