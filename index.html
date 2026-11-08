@@ -195,4 +195,143 @@ function exportData(){let data={app:"副教科 TEST LAB",version:1,custom,progre
 function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let d=JSON.parse(r.result);if(!Array.isArray(d.custom)||!d.progress||!Array.isArray(d.weak))throw Error();if(!confirm("現在の学習データをバックアップ内容で置き換えますか？"))return;custom=d.custom;progress=d.progress;weak=d.weak;save();renderHome();alert("復元しました！")}catch(err){alert("読み込めませんでした。副教科 TEST LAB のバックアップJSONを選んでください。")}};r.readAsText(f);e.target.value=""}
 renderHome();
 </script>
+
+<style>
+:root{--accent:#e4b51d;--accent-dark:#805d00;--soft:#fff6d9}
+.brand-mark{background:#e4b51d;color:#302600}
+.header-note{font-weight:700}
+.subject .emoji{font-size:23px;border-radius:13px;background:#fff4cf}
+.mode-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:16px 0}
+.mode-grid .btn{min-height:54px;text-align:left}
+.mode-grid .btn small{display:block;font-size:10px;font-weight:500;color:inherit;opacity:.72}
+.topic-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.topic-actions .btn{padding:8px 10px;min-height:36px;font-size:11px}
+.input-answer{width:100%;border:1px solid var(--line);border-radius:11px;padding:14px;font:inherit;margin:8px 0}
+.mode-tag{display:inline-block;background:var(--soft);color:#805d00;border-radius:7px;padding:4px 8px;font-size:11px;font-weight:800}
+.subject h3{margin-top:8px}
+#custom,footer,.stats{display:none!important}
+@media(min-width:600px){.mode-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+</style>
+<script>
+/* STUDY LAB update: multi-format random practice */
+document.querySelector('.header-note').textContent='学年・学期を問わず使える副教科対策';
+document.querySelector('.hero .eyebrow').textContent='SUBJECT STUDY / ANYTIME';
+document.querySelector('.hero h1').innerHTML='知識を、使える力に。<br>問題形式を変えて何度でも。';
+document.querySelector('.hero p').innerHTML='教科・単元を選んで、4択・○×・穴埋め・一問一答に挑戦。<br>テスト範囲に合わせて、いつでも学習できます。';
+subjects.forEach(s=>{
+ const cfg={
+ '保健体育':['🏃','健康・安全とスポーツ','体のしくみから健康管理、運動まで'],
+ '技術':['⚙️','情報・技術とものづくり','情報モラル、セキュリティ、プログラミング'],
+ '家庭':['🏠','生活・消費と自立','消費生活、家族、衣生活・食生活'],
+ '美術':['🎨','美術・デザインと表現','作品鑑賞、作家、時代ごとの表現']
+ }[s.name];
+ if(cfg){s.emoji=cfg[0];s.desc=cfg[2];}
+});
+subjects.push({name:'音楽',emoji:'🎼',desc:'音楽の基礎・鑑賞・表現を学ぶ',topics:['音楽の基礎知識','楽器・音色と表現','鑑賞・音楽史']});
+const musicBank=[
+['音楽','音楽の基礎知識','音の高さを決める要素','振動数（周波数）。'],
+['音楽','音楽の基礎知識','音の大きさに関係するもの','振幅。'],
+['音楽','音楽の基礎知識','音色とは','音の質や響きの違い。'],
+['音楽','音楽の基礎知識','強弱記号 p の意味','弱く。'],
+['音楽','音楽の基礎知識','強弱記号 f の意味','強く。'],
+['音楽','音楽の基礎知識','クレッシェンドの意味','だんだん強く。'],
+['音楽','音楽の基礎知識','デクレッシェンドの意味','だんだん弱く。'],
+['音楽','音楽の基礎知識','アレグロの意味','速く、快活に。'],
+['音楽','音楽の基礎知識','アダージョの意味','ゆっくりと。'],
+['音楽','音楽の基礎知識','スタッカートの奏法','音を短く切って演奏する。'],
+['音楽','音楽の基礎知識','レガートの奏法','音をなめらかにつなげて演奏する。'],
+['音楽','楽器・音色と表現','弦楽器の音を出す方法','弦を弓でこする、または指ではじく。'],
+['音楽','楽器・音色と表現','管楽器の音を出す方法','管に息を吹き込んで振動させる。'],
+['音楽','楽器・音色と表現','打楽器の音を出す方法','たたく、振る、こするなどして音を出す。'],
+['音楽','楽器・音色と表現','弦楽器の代表例を二つ','バイオリン・チェロ（ほかにビオラ、コントラバスなど）。'],
+['音楽','楽器・音色と表現','木管楽器の代表例を二つ','フルート・クラリネット（ほかにオーボエ、ファゴットなど）。'],
+['音楽','楽器・音色と表現','金管楽器の代表例を二つ','トランペット・トロンボーン（ほかにホルン、チューバなど）。'],
+['音楽','鑑賞・音楽史','オーケストラとは','多くの種類の楽器を組み合わせて演奏する合奏形態。'],
+['音楽','鑑賞・音楽史','指揮者の役割','テンポや強弱、音楽の表現をまとめ、演奏者に伝える。'],
+['音楽','鑑賞・音楽史','作曲者とは','音楽作品をつくる人。'],
+['音楽','鑑賞・音楽史','編曲とは','既にある曲を、楽器や編成などに合わせて作り変えること。'],
+['音楽','鑑賞・音楽史','主旋律とは','曲の中心となる、最も目立つ旋律。'],
+['音楽','鑑賞・音楽史','ハーモニーとは','複数の音が同時に響き合うこと。']
+];
+base.push(...musicBank);
+function escHtml(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function renderHome(){
+ const el=document.getElementById('subjects');
+ el.innerHTML=subjects.map(s=>'<button class="subject" onclick="openSubject('+JSON.stringify(s.name)+')"><div class="emoji">'+s.emoji+'</div><h3>'+escHtml(s.name)+'</h3><p>'+escHtml(s.desc)+'</p><div class="count">'+all().filter(q=>q[0]===s.name).length+'問収録　→</div></button>').join('');
+}
+function openSubject(name){
+ currentSubject=name;
+ const s=subjects.find(x=>x.name===name), items=all().filter(q=>q[0]===name);
+ document.getElementById('detailTitle').textContent=s.name;
+ document.getElementById('detailDesc').textContent=s.desc+' ／ '+items.length+'問';
+ const mastered=items.filter(q=>progress[key(q)]?.correct>0).length;
+ document.getElementById('subjectProgress').style.width=(items.length?mastered/items.length*100:0)+'%';
+ const list=document.getElementById('topicList');
+ list.innerHTML=s.topics.map(t=>{
+  const n=items.filter(q=>q[1]===t).length;
+  return '<div class="topic"><div><b>'+escHtml(t)+'</b><span style="display:block">'+n+'問</span></div><div class="topic-actions"><button class="btn soft" onclick="startMode('+JSON.stringify(name)+','+JSON.stringify(t)+',\'flash\')">単語帳</button><button class="btn primary" onclick="startMode('+JSON.stringify(name)+','+JSON.stringify(t)+',\'mix\')">ランダム</button></div></div>';
+ }).join('');
+ document.getElementById('topicList').insertAdjacentHTML('beforebegin',
+ '<div class="mode-grid"><button class="btn primary" onclick="startMode('+JSON.stringify(name)+',null,\'mix\')">ランダム総合<small>形式を混ぜて出題</small></button><button class="btn" onclick="startMode('+JSON.stringify(name)+',null,\'mc\')">4択問題<small>選択肢から選ぶ</small></button><button class="btn" onclick="startMode('+JSON.stringify(name)+',null,\'tf\')">○×問題<small>正しいか判定</small></button><button class="btn" onclick="startMode('+JSON.stringify(name)+',null,\'fill\')">穴埋め問題<small>答えを入力</small></button><button class="btn" onclick="startMode('+JSON.stringify(name)+',null,\'short\')">一問一答<small>答えを見て自己確認</small></button><button class="btn soft" onclick="startWeak()">苦手を復習<small>登録した問題だけ</small></button></div>');
+ show('detail');
+}
+function startMode(sub,topic,kind,items=null){
+ mode=kind==='flash'?'flash':kind;
+ queue=shuffle(items||all().filter(q=>(!sub||q[0]===sub)&&(!topic||q[1]===topic)));
+ if(kind==='mix') queue=queue.slice(0,Math.min(15,queue.length));
+ idx=0;currentSubject=sub||currentSubject;currentTopic=topic;show('study');renderStudy();
+}
+function startQuiz(sub,topic=null,items=null){startMode(sub,topic,'mc',items);}
+function startFlash(sub,topic=null,items=null){startMode(sub,topic,'flash',items);}
+function startWeak(){const items=all().filter(q=>weak.includes(key(q)));if(!items.length){alert('苦手問題はまだありません。まず問題に挑戦してみよう！');return;}startMode('',null,'mix',items);}
+function renderStudy(){
+ const body=document.getElementById('studyBody'),tools=document.getElementById('studyTools');
+ if(idx>=queue.length){
+  document.getElementById('studyMode').textContent='COMPLETED';
+  document.getElementById('studyCount').textContent=queue.length+'問 完了';
+  document.getElementById('studyProgress').style.width='100%';
+  document.getElementById('prompt').textContent='おつかれさま！';
+  body.innerHTML='<p class="muted">最後まで取り組めました。苦手に登録した問題は復習できます。</p>';
+  tools.innerHTML='<button class="btn primary" onclick="backToDetail()">教科に戻る</button><button class="btn" onclick="goHome()">ホームへ</button>';return;
+ }
+ const q=queue[idx];answered=false;flashRevealed=false;
+ document.getElementById('studyMode').textContent=({mc:'4 CHOICE',tf:'TRUE / FALSE',fill:'FILL IN',short:'QUICK CHECK',flash:'FLASH CARD',mix:'RANDOM MIX'})[mode]||'PRACTICE';
+ document.getElementById('studyCount').textContent=(idx+1)+' / '+queue.length+'　・　'+q[0]+' / '+q[1];
+ document.getElementById('studyProgress').style.width=(idx/queue.length*100)+'%';
+ document.getElementById('prompt').textContent=q[2];tools.innerHTML='<button class="btn soft" onclick="markWeak()">苦手に登録</button>';
+ if(mode==='flash'||mode==='short'){
+  body.innerHTML='<div id="flashAnswer" class="answer hidden"></div><button class="btn primary" onclick="revealFlash()">答えを見る</button>';
+  tools.insertAdjacentHTML('beforeend','<button class="btn" onclick="next()">次へ →</button>');return;
+ }
+ if(mode==='mc'||mode==='mix'&&Math.random()<.5){
+  const others=shuffle(all().filter(x=>x[0]===q[0]&&x[2]!==q[2]&&x[3]!==q[3]));
+  const opts=shuffle([q[3],...others.slice(0,3).map(x=>x[3])]);
+  while(opts.length<4)opts.push(['上記以外','該当しない','判断できない'][opts.length-1]||'別の内容');
+  body.innerHTML='<div class="choices">'+opts.slice(0,4).map((o,i)=>'<button class="choice" onclick="chooseIndex(this,'+i+')">'+['A','B','C','D'][i]+'　'+escHtml(o)+'</button>').join('')+'</div><div id="feedback"></div>';
+  window.currentOptions=opts.slice(0,4);window.currentCorrect=q[3];
+ }else if(mode==='tf'||mode==='mix'&&Math.random()<.5){
+  const falseItem=shuffle(all().filter(x=>x[0]===q[0]&&x[2]!==q[2]&&x[3]!==q[3]))[0];
+  const truth=Math.random()<.5, statement=truth?q[3]:(falseItem?falseItem[3]:'該当しない内容');
+  window.currentTF=truth;window.currentCorrect=q[3];
+  body.innerHTML='<div class="answer">次の説明は正しい？<br><b>'+escHtml(statement)+'</b></div><div class="toolbar"><button class="btn" onclick="chooseTF(true)">○ 正しい</button><button class="btn" onclick="chooseTF(false)">× ちがう</button></div><div id="feedback"></div>';
+ }else{
+  body.innerHTML='<p class="muted">答えのキーワードや重要語句を入力してください。</p><input id="fillInput" class="input-answer" placeholder="答えを入力" autocomplete="off"><button class="btn primary" onclick="checkFill()">答え合わせ</button><div id="feedback"></div>';
+  document.getElementById('fillInput').addEventListener('keydown',e=>{if(e.key==='Enter')checkFill();});
+ }
+ tools.insertAdjacentHTML('beforeend','<button class="btn" id="nextBtn" disabled onclick="next()">次の問題 →</button>');
+}
+function revealFlash(){const q=queue[idx],a=document.getElementById('flashAnswer');a.textContent=q[3];a.classList.remove('hidden');flashRevealed=true;}
+function feedback(ok,extra=''){
+ const q=queue[idx],k=key(q),p=progress[k]||{tries:0,correct:0};p.tries++;if(ok)p.correct++;progress[k]=p;
+ if(!ok&&!weak.includes(k))weak.push(k);save();
+ const el=document.getElementById('feedback');if(el)el.innerHTML='<div class="feedback '+(ok?'good':'bad')+'">'+(ok?'正解！':'もう一度確認しよう')+'<br>正解：'+escHtml(q[3])+(extra?'<br>'+escHtml(extra):'')+'</div>';
+ const n=document.getElementById('nextBtn');if(n)n.disabled=false;
+}
+function chooseIndex(btn,i){if(answered)return;answered=true;const ok=window.currentOptions[i]===window.currentCorrect;document.querySelectorAll('.choice').forEach((b,j)=>{b.disabled=true;if(window.currentOptions[j]===window.currentCorrect)b.classList.add('correct');});if(!ok)btn.classList.add('wrong');feedback(ok);}
+function chooseTF(v){if(answered)return;answered=true;feedback(v===window.currentTF);}
+function checkFill(){if(answered)return;const val=(document.getElementById('fillInput').value||'').replace(/[\s　。、,.]/g,'').toLowerCase();if(!val){alert('答えを入力してください');return;}answered=true;const ans=queue[idx][3].replace(/[\s　。、,.]/g,'').toLowerCase();const ok=ans.includes(val)||val.includes(ans);feedback(ok,ok?'入力内容を確認できました':'答えの要点を確認しよう');}
+function markWeak(){const k=key(queue[idx]);if(!weak.includes(k)){weak.push(k);save();}alert('苦手問題に登録しました！');}
+function next(){idx++;renderStudy();}
+renderHome();
+</script>
 </body></html>
