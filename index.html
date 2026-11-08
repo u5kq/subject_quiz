@@ -362,8 +362,9 @@ function selectTopic(topic){
  document.getElementById("topicStage").classList.add("hidden");document.getElementById("formatStage").classList.remove("hidden");
 }
 function backToTopics(){currentTopic="";document.getElementById("formatStage").classList.add("hidden");document.getElementById("topicStage").classList.remove("hidden");document.getElementById("topicList").classList.remove("hidden")}
-function launchSelectedTopics(){const selected=[...document.querySelectorAll(".topic-pick:checked")].map(x=>x.value);if(!selected.length){alert("出題したい単元を選んでください。");return;}const items=all().filter(q=>q[0]===currentSubject&&selected.includes(q[1]));if(!items.length){alert("この単元には問題がありません。");return;}currentTopic=selected.length+"単元ミックス";mode="random";queue=shuffle(items);idx=0;show("study");renderStudy();}
+function launchSelectedTopics(){const selected=[...document.querySelectorAll(".topic-pick:checked")].map(x=>x.value);if(!selected.length){alert("出題したい単元を選んでください。");return;}const items=all().filter(q=>q[0]===currentSubject&&selected.includes(q[1]));if(!items.length){alert("この単元には問題がありません。");return;}const possible=items.filter(q=>getDistractors(q,3).length===3);if(!possible.length){alert("4択に必要な選択肢が不足しています。問題を追加してください。");return;}currentTopic=selected.length+"単元ミックス";mode="quiz";window.quizDistractorPool=items;queue=shuffle(possible).slice(0,20);idx=0;show("study");renderStudy();}
 function launch(sub,topic,kind){
+ window.quizDistractorPool=null;
  currentSubject=sub||currentSubject;currentTopic=topic;mode=kind;
  let items=all().filter(q=>(!sub||q[0]===sub)&&(!topic||q[1]===topic));
  if(!items.length){alert("この条件の問題はまだありません。");return;}
@@ -391,7 +392,7 @@ function renderStudy(){
   const distractors=getDistractors(q,3);
   const opts=shuffle([q[3],...distractors]);
   window.answerOptions=opts;window.answerCorrect=q[3];
-  body.innerHTML='<div class="choices">'+opts.map((o,i)=>'<button class="choice" onclick="chooseOption('+i+')">'+["A","B","C","D"][i]+'　'+escText(o)+'</button>').join("")+'</div><div id="feedback"></div>';
+  body.innerHTML='<div class="choices">'+opts.map((o,i)=>'<button class="choice" onclick="chooseOption('+i+')"><span class="choice-letter">'+["A","B","C","D"][i]+'</span><span class="choice-text">'+escText(o)+'</span></button>').join("")+'</div><div id="feedback"></div>';
   if(opts.length<4)body.insertAdjacentHTML("afterbegin",'<p class="muted option-note">この単元の問題数に合わせて選択肢を調整しています。</p>');
  }else if(actual==="tf"){
   const falseItem=getDistractors(q,1)[0];
@@ -413,7 +414,7 @@ function answerSimilarity(a,b){
  return same/Math.max(x.length,y.length);
 }
 function getDistractors(q,count){
- const pool=all().filter(x=>x[0]===q[0]&&x[2]!==q[2]&&x[3]!==q[3]);
+ const source=Array.isArray(window.quizDistractorPool)?window.quizDistractorPool:all();\n const pool=source.filter(x=>x[0]===q[0]&&x[2]!==q[2]&&x[3]!==q[3]);
  const unique=[],seen=new Set([String(q[3]).normalize("NFKC").replace(/\\s/g,"")]);
  for(const x of pool){const a=String(x[3]).trim(),k=a.normalize("NFKC").replace(/\\s/g,"");if(!a||seen.has(k))continue;seen.add(k);unique.push(x);}
  const sameTopic=shuffle(unique.filter(x=>x[1]===q[1]));
@@ -470,7 +471,27 @@ sessionStyle.textContent=`
 .recap li b{font-size:13px}
 .recap li span{font-size:12px;color:#625b49;margin-top:3px}
 `;
-document.head.appendChild(sessionStyle);
+sessionStyle.textContent+=`
+/* Alignment refinement: stable columns and consistent text baselines */
+.topic-list{grid-template-columns:1fr!important;gap:10px!important}
+.topic{display:grid!important;grid-template-columns:42px minmax(0,1fr) 18px!important;align-items:center!important;column-gap:12px!important;min-height:86px!important;padding:13px 15px!important}
+.topic-index{width:40px!important;height:40px!important;margin:0!important;align-self:center!important}
+.topic-main{min-width:0!important;display:flex!important;flex-direction:column!important;justify-content:center!important;gap:4px!important}
+.topic-main b{display:block!important;margin:0!important;font-size:14px!important;line-height:1.45!important;overflow-wrap:anywhere!important}
+.topic-main .topic-meta{display:block!important;margin:0!important;font-size:11px!important;line-height:1.35!important}
+.topic-arrow{display:block!important;margin:0!important;align-self:center!important;line-height:1!important;text-align:center!important}
+.multi-topic-options{grid-template-columns:1fr!important;gap:7px!important}
+.multi-topic-option{display:grid!important;grid-template-columns:20px minmax(0,1fr)!important;align-items:center!important;column-gap:10px!important;min-height:48px!important;padding:10px 12px!important;font-size:13px!important;line-height:1.45!important;text-align:left!important}
+.multi-topic-option input{width:18px!important;height:18px!important;margin:0!important;align-self:center!important}
+.multi-topic-option span{display:block!important;min-width:0!important;margin:0!important;line-height:1.45!important;overflow-wrap:anywhere!important}
+.choices{display:grid!important;grid-template-columns:1fr!important;gap:10px!important}
+.choice{display:grid!important;grid-template-columns:34px minmax(0,1fr)!important;align-items:center!important;column-gap:10px!important;min-height:62px!important;padding:12px 14px!important;text-align:left!important;line-height:1.5!important;white-space:normal!important}
+.choice .choice-letter{display:grid;place-items:center;width:30px;height:30px;border-radius:9px;background:#f4edda;color:#69551c;font-size:12px;font-weight:900;line-height:1}
+.choice .choice-text{display:block;min-width:0;line-height:1.5;overflow-wrap:anywhere}
+.recap li{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:5px!important;line-height:1.55!important}
+.recap li b,.recap li span{display:block!important;margin:0!important;line-height:1.55!important}
+@media(min-width:600px){.topic-list{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+`;\ndocument.head.appendChild(sessionStyle);
 renderHome();
 </script>
 </body></html>
