@@ -205,7 +205,7 @@ function renderStudy(){
  $("prompt").textContent=q[2];$("studySub").textContent=q[0]+"　/　"+q[1];
  tools.innerHTML='<button class="btn soft" onclick="markWeak()">☆ 苦手に登録</button>';
  let actual=mode;
- if(mode==="mix")actual=shuffle(["mc","tf","fill","flash"])[0];
+ if(mode==="mix"||mode==="weak")actual=shuffle(["mc","tf","fill","flash"])[0];
  if(actual==="flash"){body.innerHTML='<div id="flashAnswer" class="answer hidden"></div><button class="btn primary" onclick="reveal()">答えを見る</button>';tools.insertAdjacentHTML("beforeend",'<button class="btn" onclick="next()">次の問題 →</button>');return;}
  if(actual==="mc"){
   const other=shuffle(all().filter(x=>x[0]===q[0]&&x[2]!==q[2]&&x[3]!==q[3])).slice(0,3).map(x=>x[3]);
