@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#ffe99a">
+<meta name="theme-color" content="#111111">
 <title>9科テスト対策</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;600;700;800;900&display=swap');
@@ -112,6 +112,15 @@ header p{color:#655d48}
 button:focus-visible,input:focus-visible{outline:3px solid #b18d2d;outline-offset:3px}
 @media(min-width:600px){.subjects{grid-template-columns:repeat(2,minmax(0,1fr))}.subject{min-height:132px}}
 @media(max-width:370px){.subject{min-height:130px}}
+
+/* Main interface uses black; each subject keeps its distinct identity color. */
+:root{--yellow:#171717;--yellow-deep:#080808;--dark:#111111;--pale:#eeeeee;--ink:#202020;--line:#dedede}
+body{background:#f7f7f7!important}
+header{background:linear-gradient(125deg,#101010 0%,#292929 100%)!important;box-shadow:0 8px 24px rgba(0,0,0,.14)!important}
+header h1,.brand{color:#fff!important}
+header p{color:#d0d0d0!important}
+header:after{background:rgba(255,255,255,.055)!important}
+.btn.primary{background:#171717!important;border-color:#171717!important;color:#fff!important}
 </style>
 <style id="readability">
 :root{--bg:#fffdf7;--ink:#242319;--muted:#505148;--line:#ded8c4;--yellow:#f3c943;--dark:#604800;--pale:#fff1b8;--mint:#e4f2e5;--blue:#e8efff;--pink:#ffebe7}
@@ -409,6 +418,15 @@ function arg(v){return JSON.stringify(String(v)).replace(/"/g,"&quot;")}
 function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b}
 function backToDetail(){if(!currentSubject){goHome();return;}openSubject(currentSubject);if(currentTopic)selectTopic(currentTopic)}
 
+
+// Reliable subject-button click delegation (also works on nested icon/text taps).
+document.addEventListener("click",function(event){
+ const card=event.target.closest("#subjects button.subject[data-subject]");
+ if(!card)return;
+ event.preventDefault();
+ openSubject(card.dataset.subject);
+},true);
+
 /* Stable study engine + restored utilities */
 function renderHome(){
  const host=document.getElementById("subjects");if(!host)return;
@@ -417,7 +435,7 @@ function renderHome(){
  const done=document.getElementById("doneCount");if(done)done.textContent=Object.keys(progress||{}).filter(k=>progress[k]?.tries>0).length;
  host.innerHTML=subjects.map(s=>{
   const count=questions.filter(q=>Array.isArray(q)&&q[0]===s.name).length;
-  return '<button type="button" class="subject" onclick="openSubject('+arg(s.name)+')"><div class="emoji">'+s.emoji+'</div><h3>'+s.name+'</h3><p>'+s.desc+'</p><div class="count">'+count+' 問収録　→</div></button>';
+  return '<button type="button" class="subject" data-subject="'+escText(s.name)+'"><div class="emoji">'+s.emoji+'</div><h3>'+s.name+'</h3><p>'+s.desc+'</p><div class="count">'+count+' 問収録　→</div></button>';
  }).join("");
 }
 function openSubject(name){
@@ -440,7 +458,11 @@ function openSubject(name){
 function selectTopic(topic){
  currentTopic=topic;document.getElementById("selectedTopicTitle").textContent=topic;
  const items=all().filter(q=>q[0]===currentSubject&&q[1]===topic);
- const modes=[
+ const coreSubjects=["国語","数学","英語","理科","社会"];
+ const isCore=coreSubjects.includes(currentSubject);
+ const modes=isCore
+ ? [["quiz","4択暗記","A","正しい答えを4つの選択肢から選ぶ","暗記・知識定着に集中"]]
+ : [
  ["random","ランダム問題","↻","一問一答形式で問題をランダムな順番に出題","全"+items.length+"問から出題"],
  ["quiz","4択問題","A","4つの選択肢から正しい答えを選ぶ","知識の確認におすすめ"],
  ["tf","○×問題","○","説明が正しいかどうかを判断する","短時間で反復"],
