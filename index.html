@@ -486,15 +486,15 @@ function readStored(key,fallback,valid){
 let custom=readStored("副教科_custom",[],Array.isArray);
 let progress=readStored("副教科_progress",{},v=>v&&typeof v==="object"&&!Array.isArray(v));
 
-let currentSubject="",currentTopic="",queue=[],idx=0,mode="",answered=false,flashRevealed=false,correctCount=0,answeredCount=0;
+let currentSubject="",currentTopic="",currentParentSubject="",currentBranch="",activeTopicFilter=null,queue=[],idx=0,mode="",answered=false,flashRevealed=false,correctCount=0,answeredCount=0;
 const all=()=>{const seen=new Set();return base.concat(Array.isArray(custom)?custom:[]).filter(q=>Array.isArray(q)&&q.length>=4&&q.slice(0,4).every(v=>typeof v==="string")&&q.slice(0,4).every(v=>v.trim().length>0)).filter(q=>{const k=key(q);if(seen.has(k))return false;seen.add(k);return true;})};
 function save(){localStorage.setItem("副教科_custom",JSON.stringify(custom));localStorage.setItem("副教科_progress",JSON.stringify(progress))}
 function show(id){["home","detail","study"].forEach(x=>{const e=document.getElementById(x);if(e)e.classList.toggle("hidden",x!==id)});document.querySelector(".app")?.classList.toggle("is-studying",id==="study") }
-function goHome(){currentSubject="";currentTopic="";show("home");renderHome()}
+function goHome(){currentSubject="";currentTopic="";currentParentSubject="";currentBranch="";activeTopicFilter=null;show("home");renderHome()}
 function key(q){return q[0]+"|"+q[1]+"|"+q[2]}
 function arg(v){return JSON.stringify(String(v)).replace(/"/g,"&quot;")}
 function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b}
-function backToDetail(){if(!currentSubject){goHome();return;}openSubject(currentSubject);if(currentTopic)selectTopic(currentTopic)}
+function backToDetail(){if(!currentSubject){goHome();return;}const parent=currentParentSubject,branch=currentBranch,topic=currentTopic;if(parent){openSubject(parent);if(branch)openSubjectSection(branch);if(topic)selectTopic(topic);return;}openSubject(currentSubject);if(topic)selectTopic(topic)}
 
 
 // Subject cards use explicit onclick handlers rendered by renderHome().
@@ -524,25 +524,54 @@ function renderHome(){
  }).join("");
 }
 function openSubject(name){
- currentSubject=name;currentTopic=null;
+ currentParentSubject="";currentBranch="";activeTopicFilter=null;currentSubject=name;currentTopic=null;
  document.getElementById("detail").dataset.subject=name;
  const palette={"国語":["#b96b62","#f8ecea","#82453e"],"数学":["#5478b8","#edf2fb","#34558c"],"英語":["#438f88","#eaf5f3","#286b65"],"理科":["#65966a","#edf5ed","#416b45"],"社会":["#bd8150","#faf0e8","#89542f"],"保健体育":["#4e9a68","#e8f4eb","#28603c"],"技術・家庭":["#5685c4","#eaf1fb","#315b91"],"美術":["#9170b8","#f2ecf8","#65468c"],"音楽":["#d0a92e","#fbf5df","#765c12"]};
- const c=palette[name]||["#d0a92e","#fbf5df","#765c12"];const d=document.getElementById("detail");d.style.setProperty("--topic-color",c[0]);d.style.setProperty("--topic-soft",c[1]);d.style.setProperty("--topic-ink",c[2]);
+ const c=palette[name]||["#5685c4","#eaf1fb","#315b91"];const d=document.getElementById("detail");d.style.setProperty("--topic-color",c[0]);d.style.setProperty("--topic-soft",c[1]);d.style.setProperty("--topic-ink",c[2]);
  const s=subjects.find(x=>x.name===name),items=all().filter(q=>q[0]===name);
  document.getElementById("detailTitle").textContent=name;
- document.getElementById("detailDesc").textContent=s.desc+" ／ "+items.length+"問";
+ if(name==="技術・家庭"){
+  document.getElementById("detailDesc").textContent="学習する分野を選択してください";
+  document.getElementById("topicList").innerHTML=["技術","家庭"].map((v,i)=>'<button class="topic" onclick="openSubjectSection('+arg(v)+')"><span class="topic-index">'+String(i+1).padStart(2,"0")+'</span><span class="topic-main"><b>'+v+'</b><span class="topic-meta">'+all().filter(q=>q[0]===v||q[0]==="技術・家庭").length+'問</span></span><span class="topic-arrow">›</span></button>').join("");
+  document.getElementById("multiTopicStage").innerHTML="";document.getElementById("topicList").classList.remove("hidden");document.getElementById("topicStage").classList.remove("hidden");document.getElementById("formatStage").classList.add("hidden");show("detail");return;
+ }
+ if(name==="社会"){
+  document.getElementById("detailDesc").textContent="学習する分野を選択してください";
+  document.getElementById("topicList").innerHTML=["地理","歴史","公民"].map((v,i)=>'<button class="topic" onclick="openSocialCategory('+arg(v)+')"><span class="topic-index">'+String(i+1).padStart(2,"0")+'</span><span class="topic-main"><b>'+v+'</b><span class="topic-meta">分野別に学習</span></span><span class="topic-arrow">›</span></button>').join("");
+  document.getElementById("multiTopicStage").innerHTML="";document.getElementById("topicList").classList.remove("hidden");document.getElementById("topicStage").classList.remove("hidden");document.getElementById("formatStage").classList.add("hidden");show("detail");return;
+ }
+ document.getElementById("detailDesc").textContent=(s?.desc||"単元を選択")+" ／ "+items.length+"問";
+ renderTopicButtons(items);
+ show("detail");
+}
+function renderTopicButtons(items){
  const topics=[...new Set(items.map(q=>q[1]))];
  document.getElementById("topicList").innerHTML=topics.map((t,i)=>{const qs=items.filter(q=>q[1]===t);return '<button class="topic" onclick="selectTopic('+arg(t)+')"><span class="topic-index">'+String(i+1).padStart(2,"0")+'</span><span class="topic-main"><b>'+escText(t)+'</b><span class="topic-meta">'+qs.length+'問</span></span><span class="topic-arrow">›</span></button>'}).join("");
  const mix=document.getElementById("multiTopicStage");
  if(mix)mix.innerHTML='<div class="multi-topic-head"><b>複数の単元を組み合わせる</b><span>選んだ単元を混ぜて出題</span></div><div class="multi-topic-options">'+topics.map(t=>'<label class="multi-topic-option"><input type="checkbox" class="topic-pick" value="'+escText(t)+'"><span>'+escText(t)+'</span></label>').join("")+'</div><button class="btn primary multi-topic-start" onclick="launchSelectedTopics()">選択した単元からランダム出題</button>';
- document.getElementById("topicList").classList.remove("hidden");
- document.getElementById("topicStage").classList.remove("hidden");
- document.getElementById("formatStage").classList.add("hidden");
- show("detail");
+ document.getElementById("topicList").classList.remove("hidden");document.getElementById("topicStage").classList.remove("hidden");document.getElementById("formatStage").classList.add("hidden");
+}
+function openSubjectSection(branch){
+ currentParentSubject="技術・家庭";currentBranch=branch;currentSubject=branch;currentTopic=null;activeTopicFilter=null;
+ const items=all().filter(q=>q[0]===branch||q[0]==="技術・家庭");
+ document.getElementById("detailTitle").textContent="技術・家庭 ／ "+branch;
+ document.getElementById("detailDesc").textContent=branch+"の単元を選択";
+ renderTopicButtons(items);
+}
+function openSocialCategory(category){
+ currentParentSubject="社会";currentBranch=category;currentSubject="社会";currentTopic=null;
+ const allSocial=all().filter(q=>q[0]==="社会");
+ const patterns={地理:/地理|世界|日本の地域|気候|地形|産業|人口|地図/,歴史:/第二次世界大戦|戦後|歴史|時代|日本と世界/,公民:/現代社会|日本国憲法|憲法|政治|経済|人権/};
+ let items=allSocial.filter(q=>patterns[category].test(q[1]+" "+q[2]));
+ activeTopicFilter=items.map(q=>q[1]);
+ document.getElementById("detailTitle").textContent="社会 ／ "+category;
+ document.getElementById("detailDesc").textContent=category+"の単元を選択";
+ if(!items.length){document.getElementById("topicList").innerHTML='<p class="muted">この分野の問題を追加中です。地理の重要語句を優先して収録します。</p>';document.getElementById("multiTopicStage").innerHTML="";document.getElementById("topicList").classList.remove("hidden");document.getElementById("topicStage").classList.remove("hidden");document.getElementById("formatStage").classList.add("hidden");return;}
+ renderTopicButtons(items);
 }
 function selectTopic(topic){
  currentTopic=topic;document.getElementById("selectedTopicTitle").textContent=topic;
- const items=all().filter(q=>q[0]===currentSubject&&q[1]===topic);
+ const items=all().filter(q=>(q[0]===currentSubject||((currentSubject==="技術"||currentSubject==="家庭")&&q[0]==="技術・家庭"))&&q[1]===topic&&(currentSubject!=="社会"||!activeTopicFilter||activeTopicFilter.includes(q[1])));
  const coreSubjects=["国語","数学","英語","理科","社会"];
  const isCore=coreSubjects.includes(currentSubject);
  const modes=isCore
@@ -558,10 +587,10 @@ function selectTopic(topic){
  document.getElementById("topicStage").classList.add("hidden");document.getElementById("formatStage").classList.remove("hidden");
 }
 function backToTopics(){currentTopic="";document.getElementById("formatStage").classList.add("hidden");document.getElementById("topicStage").classList.remove("hidden");document.getElementById("topicList").classList.remove("hidden")}
-function launchSelectedTopics(){const selected=[...document.querySelectorAll(".topic-pick:checked")].map(x=>x.value);if(!selected.length){alert("出題したい単元を選んでください。");return;}const items=all().filter(q=>q[0]===currentSubject&&selected.includes(q[1]));if(!items.length){alert("この単元には問題がありません。");return;}window.quizDistractorPool=items;const possible=items.filter(q=>getDistractors(q,3).length===3);if(!possible.length){alert("4択に必要な選択肢が不足しています。問題を追加してください。");return;}currentTopic=selected.length+"単元ミックス";mode="quiz";window.quizDistractorPool=items;queue=shuffle(possible).slice(0,20);idx=0;correctCount=0;answeredCount=0;show("study");renderStudy();}
+function launchSelectedTopics(){const selected=[...document.querySelectorAll(".topic-pick:checked")].map(x=>x.value);if(!selected.length){alert("出題したい単元を選んでください。");return;}const items=all().filter(q=>(q[0]===currentSubject||((currentSubject==="技術"||currentSubject==="家庭")&&q[0]==="技術・家庭"))&&selected.includes(q[1]));if(!items.length){alert("この単元には問題がありません。");return;}window.quizDistractorPool=items;const possible=items.filter(q=>getDistractors(q,3).length===3);if(!possible.length){alert("4択に必要な選択肢が不足しています。問題を追加してください。");return;}currentTopic=selected.length+"単元ミックス";mode="quiz";window.quizDistractorPool=items;queue=shuffle(possible).slice(0,20);idx=0;correctCount=0;answeredCount=0;show("study");renderStudy();}
 function launch(sub,topic,kind){
  window.quizDistractorPool=null;currentSubject=sub||currentSubject;currentTopic=topic;mode=kind;
- let items=all().filter(q=>(!sub||q[0]===sub)&&(!topic||q[1]===topic));if(!items.length){alert("この条件の問題はまだありません。");return;}
+ let items=all().filter(q=>(!sub||q[0]===sub||((sub==="技術"||sub==="家庭")&&q[0]==="技術・家庭"))&&(!topic||q[1]===topic));if(!items.length){alert("この条件の問題はまだありません。");return;}
  if(kind==="quiz"){window.quizDistractorPool=items;items=items.filter(q=>getDistractors(q,3).length===3);if(!items.length){alert("4択に必要な選択肢が不足しています。");return;}}
  queue=shuffle(items);if(kind==="random")queue=queue.slice(0,Math.min(20,queue.length));idx=0;correctCount=0;answeredCount=0;show("study");renderStudy();
 }
