@@ -184,9 +184,9 @@ function backToDetail(){if(currentSubject)openSubject(currentSubject);else goHom
 
 /* Stable study engine + restored utilities */
 function renderHome(){
- document.getElementById("totalCount").textContent=all().length;
- document.getElementById("doneCount").textContent=Object.keys(progress).filter(k=>progress[k]?.tries>0).length;
- document.getElementById("weakCount").textContent=weak.length;
+ const total=document.getElementById("totalCount");if(total)total.textContent=all().length;
+ const done=document.getElementById("doneCount");if(done)done.textContent=Object.keys(progress).filter(k=>progress[k]?.tries>0).length;
+ const weakEl=document.getElementById("weakCount");if(weakEl)weakEl.textContent=weak.length;
  document.getElementById("subjects").innerHTML=subjects.map(s=>'<button class="subject" onclick="openSubject('+JSON.stringify(s.name)+')"><div class="emoji">'+s.emoji+'</div><h3>'+s.name+'</h3><p>'+s.desc+'</p><div class="count">'+all().filter(q=>q[0]===s.name).length+' 問収録　→</div></button>').join("");
 }
 function openSubject(name){
