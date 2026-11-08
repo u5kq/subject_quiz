@@ -1037,7 +1037,7 @@ function goHome(){currentSubject="";currentTopic="";currentParentSubject="";curr
 function key(q){return q[0]+"|"+q[1]+"|"+q[2]}
 function arg(v){return JSON.stringify(String(v)).replace(/"/g,"&quot;")}
 function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b}
-function backToDetail(){if(!currentSubject){goHome();return;}const parent=currentParentSubject,branch=currentBranch,topic=currentTopic;if(parent){openSubject(parent);if(branch){if(parent==="社会")openSocialCategory(branch);else openSubjectSection(branch);}if(topic)selectTopic(topic);return;}openSubject(currentSubject);if(topic)selectTopic(topic)}
+function backToDetail(){if(!currentSubject){goHome();return;}const parent=currentParentSubject,branch=currentBranch,topic=currentTopic;if(parent){openSubject(parent);if(branch){if(parent==="社会")openSocialCategory(branch);else if(parent==="保健体育")openHealthPECategory(branch);else openSubjectSection(branch);}if(topic)selectTopic(topic);return;}openSubject(currentSubject);if(topic)selectTopic(topic)}
 
 
 // Subject cards use explicit onclick handlers rendered by renderHome().
@@ -1083,6 +1083,11 @@ function openSubject(name){
   document.getElementById("topicList").innerHTML=["地理","歴史","公民"].map((v,i)=>'<button class="topic" onclick="openSocialCategory('+arg(v)+')"><span class="topic-index">'+String(i+1).padStart(2,"0")+'</span><span class="topic-main"><b>'+v+'</b><span class="topic-meta">分野別に学習</span></span><span class="topic-arrow">›</span></button>').join("");
   document.getElementById("multiTopicStage").innerHTML="";document.getElementById("topicList").classList.remove("hidden");document.getElementById("topicStage").classList.remove("hidden");document.getElementById("formatStage").classList.add("hidden");show("detail");return;
  }
+ if(name==="保健体育"){
+  document.getElementById("detailDesc").textContent="学習する分野を選択してください";
+  document.getElementById("topicList").innerHTML=["保健分野","体育分野"].map((v,i)=>'<button class="topic" onclick="openHealthPECategory('+arg(v)+')"><span class="topic-index">'+String(i+1).padStart(2,"0")+'</span><span class="topic-main"><b>'+v+'</b><span class="topic-meta">分野別に学習</span></span><span class="topic-arrow">›</span></button>').join("");
+  document.getElementById("multiTopicStage").innerHTML="";document.getElementById("topicList").classList.remove("hidden");document.getElementById("topicStage").classList.remove("hidden");document.getElementById("formatStage").classList.add("hidden");show("detail");return;
+ }
  document.getElementById("detailDesc").textContent=(s?.desc||"単元を選択")+" ／ "+items.length+"問";
  renderTopicButtons(items);
  show("detail");
@@ -1114,7 +1119,18 @@ function questionsForCurrentBranch(){
  const data=all();
  if(currentParentSubject==="技術・家庭")return data.filter(q=>q[0]===currentBranch);
  if(currentParentSubject==="社会")return data.filter(q=>q[0]==="社会"&&socialCategoryMatches(q,currentBranch));
+ if(currentParentSubject==="保健体育"){
+  const healthTopics=["医薬品・保健医療","喫煙・飲酒・薬物乱用","心の健康とストレス","応急手当と安全","感染症と予防","生活習慣と健康"];
+  return data.filter(q=>q[0]==="保健体育"&&(currentBranch==="保健分野"?healthTopics.includes(q[1]):!healthTopics.includes(q[1])));
+ }
  return data.filter(q=>q[0]===currentSubject);
+}
+function openHealthPECategory(category){
+ currentParentSubject="保健体育";currentBranch=category;currentSubject="保健体育";currentTopic=null;activeTopicFilter=null;
+ const items=questionsForCurrentBranch();
+ document.getElementById("detailTitle").textContent="保健体育 ／ "+category;
+ document.getElementById("detailDesc").textContent=category+"の単元を選択 ／ "+items.length+"問";
+ renderTopicButtons(items);
 }
 function openSocialCategory(category){
  currentParentSubject="社会";currentBranch=category;currentSubject="社会";currentTopic=null;
