@@ -178,8 +178,7 @@ button:focus-visible,input:focus-visible{outline:3px solid #8b6900;outline-offse
  <button class="back" onclick="goHome()">← 教科選択</button>
  <div class="panel">
   <div class="card-label">02 / UNIT</div><h2 id="detailTitle"></h2><p class="muted" id="detailDesc"></p>
-  <div class="progress"><i id="subjectProgress"></i></div>
-  <div id="topicStage"><div class="section-head"><h3>単元を選ぶ</h3><small>UNIT</small></div><div class="topic-list" id="topicList"></div></div>
+  <div id="topicStage"><div class="section-head"><h3>単元を選ぶ</h3><small>UNIT</small></div><div class="topic-list" id="topicList"></div><div id="multiTopicStage" class="multi-topic-stage"></div></div>
   <div id="formatStage" class="hidden">
    <button class="back" onclick="backToTopics()">← 単元一覧</button>
    <div class="section-head"><h3 id="selectedTopicTitle"></h3><small>03 / FORMAT</small></div>
@@ -191,7 +190,6 @@ button:focus-visible,input:focus-visible{outline:3px solid #8b6900;outline-offse
  <button class="back" onclick="backToDetail()">← 出題形式に戻る</button>
  <div class="panel">
   <div class="card-label" id="studyMode">PRACTICE</div><div class="muted" id="studyCount"></div>
-  <div class="progress"><i id="studyProgress"></i></div>
   <div class="question" id="prompt"></div><div id="studyBody"></div><div class="toolbar" id="studyTools"></div>
  </div>
 </section>
@@ -341,10 +339,10 @@ function openSubject(name){
  const s=subjects.find(x=>x.name===name),items=all().filter(q=>q[0]===name);
  document.getElementById("detailTitle").textContent=name;
  document.getElementById("detailDesc").textContent=s.desc+" ／ "+items.length+"問";
- const mastered=items.filter(q=>progress[key(q)]?.correct>0).length;
- document.getElementById("subjectProgress").style.width=(items.length?mastered/items.length*100:0)+"%";
  const topics=[...new Set(items.map(q=>q[1]))];
- document.getElementById("topicList").innerHTML=topics.map((t,i)=>{const qs=items.filter(q=>q[1]===t),done=qs.filter(q=>progress[key(q)]?.tries>0).length,rate=qs.length?Math.round(done/qs.length*100):0;return '<button class="topic" onclick="selectTopic('+arg(t)+')"><span class="topic-index">'+String(i+1).padStart(2,"0")+'</span><span class="topic-main"><b>'+escText(t)+'</b><span class="topic-meta">'+qs.length+'問収録 ・ '+done+'問学習済み</span><span class="topic-progress"><i style="width:'+rate+'%"></i></span></span><span class="topic-arrow">›</span></button>'}).join("");
+ document.getElementById("topicList").innerHTML=topics.map((t,i)=>{const qs=items.filter(q=>q[1]===t);return '<button class="topic" onclick="selectTopic('+arg(t)+')"><span class="topic-index">'+String(i+1).padStart(2,"0")+'</span><span class="topic-main"><b>'+escText(t)+'</b><span class="topic-meta">'+qs.length+'問</span></span><span class="topic-arrow">›</span></button>'}).join("");
+ const mix=document.getElementById("multiTopicStage");
+ if(mix)mix.innerHTML='<div class="multi-topic-head"><b>複数の単元を組み合わせる</b><span>選んだ単元を混ぜて出題</span></div><div class="multi-topic-options">'+topics.map(t=>'<label class="multi-topic-option"><input type="checkbox" class="topic-pick" value="'+escText(t)+'"><span>'+escText(t)+'</span></label>').join("")+'</div><button class="btn primary multi-topic-start" onclick="launchSelectedTopics()">選択した単元からランダム出題</button>';
  document.getElementById("topicList").classList.remove("hidden");
  document.getElementById("topicStage").classList.remove("hidden");
  document.getElementById("formatStage").classList.add("hidden");
@@ -364,6 +362,7 @@ function selectTopic(topic){
  document.getElementById("topicStage").classList.add("hidden");document.getElementById("formatStage").classList.remove("hidden");
 }
 function backToTopics(){currentTopic="";document.getElementById("formatStage").classList.add("hidden");document.getElementById("topicStage").classList.remove("hidden");document.getElementById("topicList").classList.remove("hidden")}
+function launchSelectedTopics(){const selected=[...document.querySelectorAll(".topic-pick:checked")].map(x=>x.value);if(!selected.length){alert("出題したい単元を選んでください。");return;}const items=all().filter(q=>q[0]===currentSubject&&selected.includes(q[1]));if(!items.length){alert("この単元には問題がありません。");return;}currentTopic=selected.length+"単元ミックス";mode="random";queue=shuffle(items);idx=0;show("study");renderStudy();}
 function launch(sub,topic,kind){
  currentSubject=sub||currentSubject;currentTopic=topic;mode=kind;
  let items=all().filter(q=>(!sub||q[0]===sub)&&(!topic||q[1]===topic));
@@ -377,14 +376,14 @@ function renderStudy(){
  const body=document.getElementById("studyBody"),tools=document.getElementById("studyTools");
  if(idx>=queue.length){
   document.getElementById("studyMode").textContent="COMPLETED";document.getElementById("studyCount").textContent=queue.length+"問 完了";
-  document.getElementById("studyProgress").style.width="100%";document.getElementById("prompt").textContent="おつかれさま！";
-  body.innerHTML='<div class="answer">最後まで取り組めました。<br>今回の問題演習はこれで終了です。</div>';
+  document.getElementById("prompt").textContent="おつかれさま！";
+  const recap=queue.map((q,i)=>'<li><b>'+escText(q[2])+'</b><span>'+escText(q[3])+'</span></li>').join("");
+  body.innerHTML='<div class="answer">今回の学習は終了です。</div><div class="recap"><h3>覚えておきたい重要ポイント</h3><ol>'+recap+'</ol></div>';
   tools.innerHTML='<button class="btn primary" onclick="backToDetail()">教科に戻る</button><button class="btn" onclick="goHome()">ホームへ</button>';return;
  }
  const q=queue[idx];answered=false;flashRevealed=false;
  document.getElementById("studyMode").textContent=({random:"RANDOM Q&A",quiz:"4 CHOICE",tf:"TRUE / FALSE",fill:"FILL IN",flash:"FLASH CARD"})[mode]||"PRACTICE";
  document.getElementById("studyCount").textContent=(idx+1)+" / "+queue.length+"　・　"+q[0]+" / "+q[1];
- document.getElementById("studyProgress").style.width=(idx/queue.length*100)+"%";
  document.getElementById("prompt").textContent=q[2];tools.innerHTML='';
  let actual=mode;if(mode==="random")actual="flash";
  if(actual==="flash"){body.innerHTML='<div id="flashAnswer" class="answer hidden"></div><button class="btn primary" onclick="revealFlash()">答えを見る</button>';tools.insertAdjacentHTML("beforeend",'<button class="btn" onclick="next()">次の問題 →</button>');return;}
@@ -427,8 +426,7 @@ function getDistractors(q,count){
 function escText(v){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function revealFlash(){const a=document.getElementById("flashAnswer");a.textContent=queue[idx][3];a.classList.remove("hidden");flashRevealed=true;}
 function recordAnswer(ok,approximate=false){
- const q=queue[idx],k=key(q),p=progress[k]||{tries:0,correct:0};p.tries++;if(ok)p.correct++;progress[k]=p;
- save();
+ const q=queue[idx];
  const el=document.getElementById("feedback");if(el)el.innerHTML='<div class="feedback '+(ok?'good':'bad')+'">'+(ok?(approximate?'正解！（表現の違いを考慮）':'正解！'):'不正解。答えを確認しよう。')+'<br><b>正解：</b>'+escText(q[3])+'</div>';
  const n=document.getElementById("nextBtn");if(n)n.disabled=false;
 }
@@ -452,6 +450,27 @@ function checkFill(){
  const ok=exact||close;answered=true;recordAnswer(ok,close&&!exact);
 }
 function next(){idx++;renderStudy();}
+/* One-session study UI */
+const sessionStyle=document.createElement("style");
+sessionStyle.textContent=`
+.multi-topic-stage{margin-top:22px;padding:17px;border:1px solid var(--line);border-radius:18px;background:#fffdf6}
+.multi-topic-head{display:flex;flex-direction:column;gap:2px;margin-bottom:12px}
+.multi-topic-head b{font-size:14px;font-weight:900}
+.multi-topic-head span{font-size:11px;color:var(--muted)}
+.multi-topic-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.multi-topic-option{display:flex;align-items:center;gap:8px;padding:10px;border:1px solid #eee5cc;border-radius:12px;background:#fff;font-size:12px;font-weight:700;min-width:0}
+.multi-topic-option input{width:17px;height:17px;accent-color:#d5a91e;flex:none}
+.multi-topic-start{width:100%;margin-top:13px}
+.recap{margin-top:18px;padding:17px;border:1px solid var(--line);border-radius:17px;background:#fffdf6}
+.recap h3{margin:0 0 12px;font-size:16px;font-weight:900}
+.recap ol{margin:0;padding-left:22px}
+.recap li{padding:9px 0;border-bottom:1px solid #eee8d8}
+.recap li:last-child{border-bottom:0}
+.recap li b,.recap li span{display:block}
+.recap li b{font-size:13px}
+.recap li span{font-size:12px;color:#625b49;margin-top:3px}
+`;
+document.head.appendChild(sessionStyle);
 renderHome();
 </script>
 </body></html>
