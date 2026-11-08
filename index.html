@@ -283,7 +283,7 @@ button:focus-visible,input:focus-visible{outline:3px solid #777f84!important;out
 const subjects=[
  {name:"国語",emoji:"📖",desc:"故郷・奥の細道・言葉の知識",topics:["故郷","夏草・奥の細道","慣用句・ことわざ・故事成語"]},
  {name:"数学",emoji:"📐",desc:"二次方程式・関数・相似",topics:["二次方程式","関数 y=ax²","相似・図形・既習内容"]},
- {name:"英語",emoji:"A",desc:"受動態・現在完了・関係代名詞",topics:["受動態","現在完了","関係代名詞・分詞・既習文法"]},
+ {name:"英語",emoji:"A",desc:"文法・英単語・Let’s Read2",topics:["受動態","現在完了","関係代名詞・分詞・既習文法","【Let’s Read2】"]},
  {name:"理科",emoji:"🔬",desc:"生命の連続性・イオン",topics:["生命の連続性・遺伝","水溶液とイオン","酸・アルカリ・中和・電池"]},
  {name:"社会",emoji:"🌏",desc:"第二次世界大戦・戦後・憲法",topics:["第二次世界大戦と日本","戦後の日本と世界","現代社会・日本国憲法"]},
  {name:"保健体育",emoji:"🏃",desc:"保健・体育・スポーツ",topics:["感染症と予防","医薬品・保健医療","スポーツの技術と戦術","体力と運動","運動やスポーツの安全"]},
@@ -292,6 +292,70 @@ const subjects=[
  {name:"音楽",emoji:"🎼",desc:"音楽の基礎・鑑賞・表現",topics:["音楽の基礎知識","楽器・音色と表現","鑑賞・音楽史"]}
 ];
 const base=[
+["英語","【Let’s Read2】","imagine の意味は？","〜を想像する"],
+["英語","【Let’s Read2】","human-like の意味は？","人間のような"],
+["英語","【Let’s Read2】","scientist(s) の意味は？","科学者"],
+["英語","【Let’s Read2】","relationship の意味は？","関係"],
+["英語","【Let’s Read2】","cyborg-type の意味は？","サイボーグ型の"],
+["英語","【Let’s Read2】","itself の意味は？","それ自体"],
+["英語","【Let’s Read2】","injury の意味は？","けが"],
+["英語","【Let’s Read2】","facility の意味は？","施設"],
+["英語","【Let’s Read2】","care facility の意味は？","介護施設"],
+["英語","【Let’s Read2】","transfer の意味は？","〜を移す・運ぶ"],
+["英語","【Let’s Read2】","elderly の意味は？","年配の"],
+["英語","【Let’s Read2】","in addition の意味は？","さらに・そのうえ"],
+["英語","【Let’s Read2】","improve の意味は？","〜を改善する"],
+["英語","【Let’s Read2】","maintain の意味は？","〜を維持する"],
+["英語","【Let’s Read2】","physical の意味は？","身体の"],
+["英語","【Let’s Read2】","function の意味は？","機能"],
+["英語","【Let’s Read2】","widen の意味は？","〜を広げる"],
+["英語","【Let’s Read2】","possibility の意味は？","可能性"],
+["英語","【Let’s Read2】","avatar の意味は？","分身・アバター"],
+["英語","【Let’s Read2】","represent の意味は？","〜を表す・代表する"],
+["英語","【Let’s Read2】","serious illness の意味は？","重い病気"],
+["英語","【Let’s Read2】","control の意味は？","〜を操作する"],
+["英語","【Let’s Read2】","movement の意味は？","動き"],
+["英語","【Let’s Read2】","finger の意味は？","指"],
+["英語","【Let’s Read2】","microphone の意味は？","マイク"],
+["英語","【Let’s Read2】","sociable の意味は？","社交的な"],
+["英語","【Let’s Read2】","somebody の意味は？","だれか"],
+["英語","【Let’s Read2】","useless の意味は？","役に立たない"],
+["英語","【Let’s Read2】","helpless の意味は？","どうしようもない"],
+["英語","【Let’s Read2】","notice の意味は？","〜に気づく"],
+["英語","【Let’s Read2】","happily の意味は？","楽しそうに・幸せに"],
+["英語","【Let’s Read2】","develop の意味は？","〜を開発する"],
+["英語","【Let’s Read2】","recognize の意味は？","〜を認識する"],
+["英語","【Let’s Read2】","value の意味は？","価値"],
+["英語","【Let’s Read2】","cooperation の意味は？","協力"],
+["英語","【Let’s Read2】","expect の意味は？","〜を期待する"],
+["英語","【Let’s Read2】","imperfect の意味は？","不完全な"],
+["英語","【Let’s Read2】","importance の意味は？","重要性"],
+["英語","【Let’s Read2】","cooperate の意味は？","協力する"],
+["英語","【Let’s Read2】","article の意味は？","記事"],
+["英語","【Let’s Read2】","HAL はどのようなロボット？","人が重い物を運ぶのを助け、けがから守るロボットスーツ"],
+["英語","【Let’s Read2】","HAL はどこで使われている？","介護施設"],
+["英語","【Let’s Read2】","HAL は年配の人にどのような助けをする？","体を動かすのを助ける"],
+["英語","【Let’s Read2】","OriHime はどのようなロボット？","現実世界の人と交流できるアバターロボット"],
+["英語","【Let’s Read2】","OriHime を操作した長広さんは、どこから指を動かした？","自宅"],
+["英語","【Let’s Read2】","OriHime は長広さんがどこで働くことを可能にした？","カフェ"],
+["英語","【Let’s Read2】","Sociable Trash Box は何を見つける？","床に落ちているごみ"],
+["英語","【Let’s Read2】","Sociable Trash Box ができないことは？","ごみを拾い上げること"],
+["英語","【Let’s Read2】","Sociable Trash Box が人々に伝える大切なことは？","互いに助け合うこと"],
+["英語","【Let’s Read2】","本文の主題はどれ？","人間とロボットの関係"],
+["英語","【Let’s Read2】","Scientists are continuing to (　　 ) more and more robots.","invent"],
+["英語","【Let’s Read2】","HAL helps people carry (　　 ) things.","heavy"],
+["英語","【Let’s Read2】","It protects them from (　　 ).","injury"],
+["英語","【Let’s Read2】","It helps them move their (　　 ).","body"],
+["英語","【Let’s Read2】","It improves and maintains their physical (　　 ).","functions"],
+["英語","【Let’s Read2】","This robot can (　　 ) you in the virtual world.","represent"],
+["英語","【Let’s Read2】","He had a serious (　　 ).","illness"],
+["英語","【Let’s Read2】","He controlled the robot with small (　　 ) of his fingers.","movements"],
+["英語","【Let’s Read2】","He talked through a (　　 ).","microphone"],
+["英語","【Let’s Read2】","People came to it and picked up the trash (　　 ).","happily"],
+["英語","【Let’s Read2】","The developer wanted people to recognize the value of (　　 ).","cooperation"],
+["英語","【Let’s Read2】","They might help us learn to (　　 ) and be kind to others.","cooperate"]
+
+
 ["保健体育","感染症と予防","飛まつ感染","人のくしゃみや咳などの飛まつによって感染すること。"],
 ["保健体育","感染症と予防","経口感染","病原体がついた手で触った食品を口に入れることで感染すること。"],
 ["保健体育","感染症と予防","空気感染","飛まつの水分が蒸発し、病原体が空気中に漂うことで感染すること。"],
@@ -675,7 +739,7 @@ function renderTopicButtons(items){
 }
 function openSubjectSection(branch){
  currentParentSubject="技術・家庭";currentBranch=branch;currentSubject=branch;currentTopic=null;activeTopicFilter=null;
- const items=all().filter(q=>q[0]===branch||q[0]==="技術・家庭");
+ const items=all().filter(q=>q[0]===branch);
  document.getElementById("detailTitle").textContent="技術・家庭 ／ "+branch;
  document.getElementById("detailDesc").textContent=branch+"の単元を選択";
  renderTopicButtons(items);
@@ -693,7 +757,7 @@ function openSocialCategory(category){
 }
 function selectTopic(topic){
  currentTopic=topic;document.getElementById("selectedTopicTitle").textContent=topic;
- const items=all().filter(q=>(q[0]===currentSubject||((currentSubject==="技術"||currentSubject==="家庭")&&q[0]==="技術・家庭"))&&q[1]===topic&&(currentSubject!=="社会"||!activeTopicFilter||activeTopicFilter.includes(q[1])));
+ const items=all().filter(q=>(q[0]===currentSubject||false)&&q[1]===topic&&(currentSubject!=="社会"||!activeTopicFilter||activeTopicFilter.includes(q[1])));
  const coreSubjects=["国語","数学","英語","理科","社会"];
  const isCore=coreSubjects.includes(currentSubject);
  const modes=isCore
@@ -712,7 +776,7 @@ function backToTopics(){currentTopic="";document.getElementById("formatStage").c
 function launchSelectedTopics(){const selected=[...document.querySelectorAll(".topic-pick:checked")].map(x=>x.value);if(!selected.length){alert("出題したい単元を選んでください。");return;}const items=all().filter(q=>(q[0]===currentSubject||((currentSubject==="技術"||currentSubject==="家庭")&&q[0]==="技術・家庭"))&&selected.includes(q[1]));if(!items.length){alert("この単元には問題がありません。");return;}window.quizDistractorPool=items;const possible=items.filter(q=>getDistractors(q,3).length===3);if(!possible.length){alert("4択に必要な選択肢が不足しています。問題を追加してください。");return;}currentTopic=selected.length+"単元ミックス";mode="quiz";window.quizDistractorPool=items;queue=shuffle(possible).slice(0,20);idx=0;correctCount=0;answeredCount=0;show("study");renderStudy();}
 function launch(sub,topic,kind){
  window.quizDistractorPool=null;currentSubject=sub||currentSubject;currentTopic=topic;mode=kind;
- let items=all().filter(q=>(!sub||q[0]===sub||((sub==="技術"||sub==="家庭")&&q[0]==="技術・家庭"))&&(!topic||q[1]===topic));if(!items.length){alert("この条件の問題はまだありません。");return;}
+ let items=all().filter(q=>(!sub||q[0]===sub||false)&&(!topic||q[1]===topic));if(!items.length){alert("この条件の問題はまだありません。");return;}
  if(kind==="quiz"){window.quizDistractorPool=items;items=items.filter(q=>getDistractors(q,3).length===3);if(!items.length){alert("4択に必要な選択肢が不足しています。");return;}}
  queue=shuffle(items);if(kind==="random")queue=queue.slice(0,Math.min(20,queue.length));idx=0;correctCount=0;answeredCount=0;show("study");renderStudy();
 }
