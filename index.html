@@ -64,6 +64,54 @@ header p{position:relative;z-index:1;margin:0;color:#79652b;font-size:12px;font-
 button:focus-visible,input:focus-visible{outline:3px solid #e4bd43;outline-offset:3px}
 @media(min-width:600px){.subjects{grid-template-columns:repeat(3,minmax(0,1fr))}.mode-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:370px){.app{padding:0 13px 32px}header{margin:0 -13px 20px;padding:24px 17px 28px}.panel{padding:16px}.subject{padding:14px;min-height:138px}}
+/* Calm, high-contrast student-first visual system */
+:root{--bg:#f6f6f3;--paper:#fff;--ink:#252525;--muted:#626262;--line:#e4e4df;--yellow:#f2cf58;--yellow-deep:#987515;--dark:#46370c;--pale:#fff7dc;--mint:#f0f3ed;--blue:#f0f2f3;--pink:#f5eeee;--shadow:0 3px 12px rgba(25,25,20,.045)}
+body{background:var(--bg);color:var(--ink)}
+header{background:#f4e7b9;border-bottom:1px solid #e7dba9;box-shadow:none;border-radius:0 0 20px 20px;padding-top:23px;padding-bottom:25px}
+header:after{display:none}
+.brand{color:#5f501f}
+header h1{font-size:clamp(27px,6.5vw,33px);letter-spacing:.025em}
+header p{color:#655d48}
+.section-head{margin-top:20px;margin-bottom:10px}
+.section-head h2,.section-head h3{font-size:17px;letter-spacing:.015em}
+.section-head small,.card-label{color:#77715f;letter-spacing:.1em}
+.home-lead{font-size:12px;margin:0 1px 14px}
+.subjects{gap:11px}
+.subject{min-height:139px;padding:16px 15px;border:1px solid #e1e1dc;border-radius:15px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.035);transition:border-color .15s,transform .15s}
+.subject:active{transform:scale(.985);border-color:#c6a943}
+.subject .emoji{width:37px;height:37px;border-radius:11px;background:#f4f1e7!important;color:#514a38;filter:grayscale(1);font-size:19px}
+.subject h3{font-size:15px;letter-spacing:0;margin:10px 0 2px}
+.subject p{font-size:11px;color:#656565;line-height:1.5}
+.subject .count{font-size:10px;color:#75612b;font-weight:700;margin-top:7px}
+.panel{border-color:#e5e5df;border-radius:17px;box-shadow:0 2px 10px rgba(0,0,0,.035)}
+.back{background:#f3f0e6;border:1px solid #e3dfd1;color:#494333}
+.progress{background:#e9e9e4}
+.progress i{background:#d8b84d}
+.topic-list{gap:9px}
+.topic{min-height:82px;border:1px solid #e5e5df;border-radius:14px;background:#fff;box-shadow:0 2px 7px rgba(0,0,0,.025);padding:12px}
+.topic:hover{border-color:#cbb66f;box-shadow:0 3px 9px rgba(0,0,0,.04)}
+.topic-index,.topic:nth-child(3n+2) .topic-index,.topic:nth-child(3n) .topic-index{width:36px;height:36px;border-radius:10px;background:#f3f1e9;color:#5e563e}
+.topic-main b{font-size:13px}
+.topic-meta{color:#666;font-size:10px}
+.topic-progress{background:#ecece7}
+.topic-progress i{background:#d5b64e}
+.topic-arrow{color:#77715f}
+.mode-card,.mode-card.mode-featured{background:#fff;border:1px solid #e3e3dd;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.03)}
+.mode-card.mode-featured{border-color:#d8c27a}
+.mode-icon,.mode-card:nth-child(2) .mode-icon,.mode-card:nth-child(3) .mode-icon,.mode-card:nth-child(4) .mode-icon,.mode-card:nth-child(5) .mode-icon{background:#f2f0e8;color:#5b533d;border-radius:11px}
+.mode-copy em{color:#75612b}
+.btn.primary{background:#f1d36f;border-color:#e0c15a;color:#3f3518}
+.btn.soft{background:#f4f1e7;border-color:#e5e0d2;color:#494333}
+.question{color:#252525}
+.answer{background:#f7f4e9;border:1px solid #e7dfc5}
+.choice{border:1px solid #deded8;border-radius:12px;background:#fff}
+.choice.correct{background:#eef2eb;border-color:#aab7a2;color:#30402d}
+.choice.wrong{background:#f5eeee;border-color:#c9a5a5;color:#633b3b}
+.feedback.good{background:#eef2eb;color:#30402d}
+.feedback.bad{background:#f5eeee;color:#633b3b}
+button:focus-visible,input:focus-visible{outline:3px solid #b18d2d;outline-offset:3px}
+@media(min-width:600px){.subjects{grid-template-columns:repeat(2,minmax(0,1fr))}.subject{min-height:132px}}
+@media(max-width:370px){.subject{min-height:130px}}
 </style>
 <style id="readability">
 :root{--bg:#fffdf7;--ink:#242319;--muted:#505148;--line:#ded8c4;--yellow:#f3c943;--dark:#604800;--pale:#fff1b8;--mint:#e4f2e5;--blue:#e8efff;--pink:#ffebe7}
