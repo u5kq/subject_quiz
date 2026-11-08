@@ -28,7 +28,7 @@ button:focus-visible{outline:3px solid #e4bd43;outline-offset:3px}
 :root{--accent:#e8b91e;--accent-dark:#795900;--soft:#fff6d8;--bg:#f6f6f4;--line:#e7e7e7}
 header{background:#fffdf6}.brand-mark{background:var(--accent)}
 .hero{background:linear-gradient(135deg,#fff8df,#fff1bd);border:1px solid #f0dfa8;border-radius:20px;padding:22px;margin-bottom:18px}
-.hero p{line-height:1.8}.stats{display:grid!important;grid-template-columns:repeat(3,1fr);gap:9px;margin:17px 0}
+.hero p{line-height:1.8}.stats{display:none!important}
 .stat{background:#fff;border:1px solid var(--line);border-radius:13px;padding:11px;text-align:center}
 .stat strong{display:block;font-size:21px;color:var(--accent-dark)}.stat span{font-size:10px;color:var(--muted)}
 .home-tools{display:flex;flex-wrap:wrap;gap:8px;margin:15px 0}
@@ -50,9 +50,8 @@ label.muted{display:block;margin-top:7px}
 <header><div class="brand"><span class="brand-mark">Q</span>副教科 QUIZ</div><div class="header-note">いつでも使える学習ツール</div></header>
 <main id="home">
 <section class="hero"><div class="eyebrow">STUDY / PRACTICE / REVIEW</div><h1>わかるまで、何度でも。</h1><p>教科・単元を選んで、問題形式を変えながら学習。定期テストにも日々の復習にも使えます。</p></section>
-<div class="stats"><div class="stat"><strong id="totalCount">0</strong><span>収録問題</span></div><div class="stat"><strong id="doneCount">0</strong><span>解答した問題</span></div><div class="stat"><strong id="weakCount">0</strong><span>苦手登録</span></div></div>
 <div class="section-head"><h2>教科から学習する</h2><small>SUBJECTS</small></div>
-<div class="toolbar home-tools"><button class="btn primary" onclick="openCustom()">＋ 自分の問題を追加</button><button class="btn soft" onclick="startWeak()">☆ 苦手を復習</button><button class="btn" onclick="exportData()">バックアップ保存</button><label class="btn file-label">バックアップ復元<input type="file" accept="application/json" onchange="importData(event)" hidden></label></div><div class="subjects" id="subjects"></div>
+<div class="subjects" id="subjects"></div><div class="toolbar" style="margin-top:16px"><button class="btn soft" onclick="startWeak()">☆ 苦手を復習</button><button class="btn" onclick="openCustom()">問題を追加・管理</button><button class="btn" onclick="exportData()">保存</button><label class="btn file-label">復元<input type="file" accept="application/json" onchange="importData(event)" hidden></label></div>
 </main>
 <section id="detail" class="hidden"><button class="back" onclick="goHome()">← ホームに戻る</button><div class="panel"><div class="card-label">SUBJECT</div><h2 id="detailTitle"></h2><p class="muted" id="detailDesc"></p><div class="progress"><i id="subjectProgress"></i></div><div class="mode-grid" id="modeGrid"></div><div class="section-head"><h3>単元から選ぶ</h3><small>TOPICS</small></div><div class="topic-list" id="topicList"></div></div></section>
 <section id="study" class="hidden"><button class="back" onclick="backToDetail()">← 戻る</button><div class="panel"><div class="card-label" id="studyMode">PRACTICE</div><div class="muted" id="studyCount"></div><div class="progress"><i id="studyProgress"></i></div><div class="question" id="prompt"></div><div id="studyBody"></div><div class="toolbar" id="studyTools"></div></div></section>
@@ -179,6 +178,9 @@ const all=()=>base.concat(custom);
 function save(){localStorage.setItem("副教科_custom",JSON.stringify(custom));localStorage.setItem("副教科_progress",JSON.stringify(progress));localStorage.setItem("副教科_weak",JSON.stringify(weak))}
 function show(id){["home","detail","study","custom"].forEach(x=>document.getElementById(x).classList.toggle("hidden",x!==id))}
 function goHome(){show("home");renderHome()}
+function key(q){return q[0]+"|"+q[1]+"|"+q[2]}
+function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b}
+function backToDetail(){if(currentSubject)openSubject(currentSubject);else goHome()}
 
 /* Stable study engine + restored utilities */
 function renderHome(){
