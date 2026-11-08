@@ -243,10 +243,10 @@ function readStored(key,fallback,valid){
 }
 let custom=readStored("副教科_custom",[],Array.isArray);
 let progress=readStored("副教科_progress",{},v=>v&&typeof v==="object"&&!Array.isArray(v));
-let weak=readStored("副教科_weak",[],Array.isArray);
+
 let currentSubject="",currentTopic="",queue=[],idx=0,mode="",answered=false,flashRevealed=false;
 const all=()=>{const seen=new Set();return base.concat(custom).filter(q=>{const k=key(q);if(seen.has(k))return false;seen.add(k);return true;})};
-function save(){localStorage.setItem("副教科_custom",JSON.stringify(custom));localStorage.setItem("副教科_progress",JSON.stringify(progress));localStorage.setItem("副教科_weak",JSON.stringify(weak))}
+function save(){localStorage.setItem("副教科_custom",JSON.stringify(custom));localStorage.setItem("副教科_progress",JSON.stringify(progress))}
 function show(id){["home","detail","study"].forEach(x=>{const e=document.getElementById(x);if(e)e.classList.toggle("hidden",x!==id)})}
 function goHome(){currentSubject="";currentTopic="";show("home");renderHome()}
 function key(q){return q[0]+"|"+q[1]+"|"+q[2]}
@@ -258,7 +258,6 @@ function backToDetail(){if(!currentSubject){goHome();return;}openSubject(current
 function renderHome(){
  const total=document.getElementById("totalCount");if(total)total.textContent=all().length;
  const done=document.getElementById("doneCount");if(done)done.textContent=Object.keys(progress).filter(k=>progress[k]?.tries>0).length;
- const weakEl=document.getElementById("weakCount");if(weakEl)weakEl.textContent=weak.length;
  document.getElementById("subjects").innerHTML=subjects.map(s=>'<button class="subject" onclick="openSubject('+arg(s.name)+')"><div class="emoji">'+s.emoji+'</div><h3>'+s.name+'</h3><p>'+s.desc+'</p><div class="count">'+all().filter(q=>q[0]===s.name).length+' 問収録　→</div></button>').join("");
 }
 function openSubject(name){
@@ -283,8 +282,7 @@ function selectTopic(topic){
  ["quiz","4択問題","A","4つの選択肢から正しい答えを選ぶ","知識の確認におすすめ"],
  ["tf","○×問題","○","説明が正しいかどうかを判断する","短時間で反復"],
  ["fill","記述・穴埋め","✎","答えを自分で入力して確認する","表現の違いも考慮して判定"],
- ["flash","一問一答","▤","答えを見て、自分で理解を確認する","スキマ時間の復習に"],
- ["weak","苦手復習","↺","間違えた問題を中心に解き直す",weak.filter(k=>items.some(q=>key(q)===k)).length+"問"]
+ ["flash","一問一答","▤","答えを見て、自分で理解を確認する","スキマ時間の復習に"]
  ];
  document.getElementById("modeGrid").innerHTML=modes.map((m,i)=>'<button class="mode-card '+(i===0?'mode-featured':'')+'" onclick="launch('+arg(currentSubject)+','+arg(topic)+','+arg(m[0])+')"><span class="mode-icon">'+m[2]+'</span><span class="mode-copy"><b>'+m[1]+'</b><small>'+m[3]+'</small><em>'+m[4]+'</em></span><span class="mode-arrow">›</span></button>').join("");
  document.getElementById("topicStage").classList.add("hidden");document.getElementById("formatStage").classList.remove("hidden");
@@ -293,20 +291,18 @@ function backToTopics(){currentTopic="";document.getElementById("formatStage").c
 function launch(sub,topic,kind){
  currentSubject=sub||currentSubject;currentTopic=topic;mode=kind;
  let items=all().filter(q=>(!sub||q[0]===sub)&&(!topic||q[1]===topic));
- if(kind==="weak")items=all().filter(q=>weak.includes(key(q))&&(!sub||q[0]===sub));
- if(!items.length){alert(kind==="weak"?"苦手登録した問題はまだありません。":"この条件の問題はまだありません。");return;}
+ if(!items.length){alert("この条件の問題はまだありません。");return;}
  queue=shuffle(items);if(kind==="mix")queue=queue.slice(0,Math.min(20,queue.length));
  idx=0;show("study");renderStudy();
 }
 function startQuiz(sub,topic=null,items=null){currentSubject=sub||currentSubject;currentTopic=topic;mode="quiz";queue=shuffle(items||all().filter(q=>q[0]===sub&&(!topic||q[1]===topic)));idx=0;if(!queue.length){alert("問題がありません");return;}show("study");renderStudy();}
 function startFlash(sub,topic=null,items=null){currentSubject=sub||currentSubject;currentTopic=topic;mode="flash";queue=shuffle(items||all().filter(q=>q[0]===sub&&(!topic||q[1]===topic)));idx=0;if(!queue.length){alert("問題がありません");return;}show("study");renderStudy();}
-function startWeak(){launch("",null,"weak");}
 function renderStudy(){
  const body=document.getElementById("studyBody"),tools=document.getElementById("studyTools");
  if(idx>=queue.length){
   document.getElementById("studyMode").textContent="COMPLETED";document.getElementById("studyCount").textContent=queue.length+"問 完了";
   document.getElementById("studyProgress").style.width="100%";document.getElementById("prompt").textContent="おつかれさま！";
-  body.innerHTML='<div class="answer">最後まで取り組めました。<br>間違えた問題は苦手復習から解き直せます。</div>';
+  body.innerHTML='<div class="answer">最後まで取り組めました。<br>今回の問題演習はこれで終了です。</div>';
   tools.innerHTML='<button class="btn primary" onclick="backToDetail()">教科に戻る</button><button class="btn" onclick="goHome()">ホームへ</button>';return;
  }
  const q=queue[idx];answered=false;flashRevealed=false;
@@ -314,7 +310,7 @@ function renderStudy(){
  document.getElementById("studyCount").textContent=(idx+1)+" / "+queue.length+"　・　"+q[0]+" / "+q[1];
  document.getElementById("studyProgress").style.width=(idx/queue.length*100)+"%";
  document.getElementById("prompt").textContent=q[2];tools.innerHTML='';
- let actual=mode;if(mode==="mix"||mode==="weak")actual=shuffle(["quiz","tf","fill","flash"])[0];
+ let actual=mode;if(mode==="mix")actual=shuffle(["quiz","tf","fill","flash"])[0];
  if(actual==="flash"){body.innerHTML='<div id="flashAnswer" class="answer hidden"></div><button class="btn primary" onclick="revealFlash()">答えを見る</button>';tools.insertAdjacentHTML("beforeend",'<button class="btn" onclick="next()">次の問題 →</button>');return;}
  if(actual==="quiz"){
   const distractors=shuffle(all().filter(x=>x[0]===q[0]&&x[2]!==q[2]&&x[3]!==q[3])).slice(0,3).map(x=>x[3]);
@@ -337,7 +333,7 @@ function escText(v){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&l
 function revealFlash(){const a=document.getElementById("flashAnswer");a.textContent=queue[idx][3];a.classList.remove("hidden");flashRevealed=true;}
 function recordAnswer(ok,approximate=false){
  const q=queue[idx],k=key(q),p=progress[k]||{tries:0,correct:0};p.tries++;if(ok)p.correct++;progress[k]=p;
- if(!ok&&!weak.includes(k))weak.push(k);save();
+ save();
  const el=document.getElementById("feedback");if(el)el.innerHTML='<div class="feedback '+(ok?'good':'bad')+'">'+(ok?(approximate?'正解！（表現の違いを考慮）':'正解！'):'不正解。答えを確認しよう。')+'<br><b>正解：</b>'+escText(q[3])+'</div>';
  const n=document.getElementById("nextBtn");if(n)n.disabled=false;
 }
