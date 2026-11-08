@@ -306,7 +306,7 @@ function renderStudy(){
   tools.innerHTML='<button class="btn primary" onclick="backToDetail()">教科に戻る</button><button class="btn" onclick="goHome()">ホームへ</button>';return;
  }
  const q=queue[idx];answered=false;flashRevealed=false;
- document.getElementById("studyMode").textContent=({mix:"RANDOM MIX",quiz:"4 CHOICE",tf:"TRUE / FALSE",fill:"FILL IN",flash:"FLASH CARD",weak:"WEAK REVIEW"})[mode]||"PRACTICE";
+ document.getElementById("studyMode").textContent=({mix:"RANDOM MIX",quiz:"4 CHOICE",tf:"TRUE / FALSE",fill:"FILL IN",flash:"FLASH CARD"})[mode]||"PRACTICE";
  document.getElementById("studyCount").textContent=(idx+1)+" / "+queue.length+"　・　"+q[0]+" / "+q[1];
  document.getElementById("studyProgress").style.width=(idx/queue.length*100)+"%";
  document.getElementById("prompt").textContent=q[2];tools.innerHTML='';
