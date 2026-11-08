@@ -486,7 +486,7 @@ function readStored(key,fallback,valid){
 let custom=readStored("副教科_custom",[],Array.isArray);
 let progress=readStored("副教科_progress",{},v=>v&&typeof v==="object"&&!Array.isArray(v));
 
-let currentSubject="",currentTopic="",queue=[],idx=0,mode="",answered=false,flashRevealed=false;
+let currentSubject="",currentTopic="",queue=[],idx=0,mode="",answered=false,flashRevealed=false,correctCount=0,answeredCount=0;
 const all=()=>{const seen=new Set();return base.concat(Array.isArray(custom)?custom:[]).filter(q=>Array.isArray(q)&&q.length>=4&&q.slice(0,4).every(v=>typeof v==="string")&&q.slice(0,4).every(v=>v.trim().length>0)).filter(q=>{const k=key(q);if(seen.has(k))return false;seen.add(k);return true;})};
 function save(){localStorage.setItem("副教科_custom",JSON.stringify(custom));localStorage.setItem("副教科_progress",JSON.stringify(progress))}
 function show(id){["home","detail","study"].forEach(x=>{const e=document.getElementById(x);if(e)e.classList.toggle("hidden",x!==id)});document.querySelector(".app")?.classList.toggle("is-studying",id==="study") }
@@ -558,22 +558,24 @@ function selectTopic(topic){
  document.getElementById("topicStage").classList.add("hidden");document.getElementById("formatStage").classList.remove("hidden");
 }
 function backToTopics(){currentTopic="";document.getElementById("formatStage").classList.add("hidden");document.getElementById("topicStage").classList.remove("hidden");document.getElementById("topicList").classList.remove("hidden")}
-function launchSelectedTopics(){const selected=[...document.querySelectorAll(".topic-pick:checked")].map(x=>x.value);if(!selected.length){alert("出題したい単元を選んでください。");return;}const items=all().filter(q=>q[0]===currentSubject&&selected.includes(q[1]));if(!items.length){alert("この単元には問題がありません。");return;}window.quizDistractorPool=items;const possible=items.filter(q=>getDistractors(q,3).length===3);if(!possible.length){alert("4択に必要な選択肢が不足しています。問題を追加してください。");return;}currentTopic=selected.length+"単元ミックス";mode="quiz";window.quizDistractorPool=items;queue=shuffle(possible).slice(0,20);idx=0;show("study");renderStudy();}
+function launchSelectedTopics(){const selected=[...document.querySelectorAll(".topic-pick:checked")].map(x=>x.value);if(!selected.length){alert("出題したい単元を選んでください。");return;}const items=all().filter(q=>q[0]===currentSubject&&selected.includes(q[1]));if(!items.length){alert("この単元には問題がありません。");return;}window.quizDistractorPool=items;const possible=items.filter(q=>getDistractors(q,3).length===3);if(!possible.length){alert("4択に必要な選択肢が不足しています。問題を追加してください。");return;}currentTopic=selected.length+"単元ミックス";mode="quiz";window.quizDistractorPool=items;queue=shuffle(possible).slice(0,20);idx=0;correctCount=0;answeredCount=0;show("study");renderStudy();}
 function launch(sub,topic,kind){
  window.quizDistractorPool=null;currentSubject=sub||currentSubject;currentTopic=topic;mode=kind;
  let items=all().filter(q=>(!sub||q[0]===sub)&&(!topic||q[1]===topic));if(!items.length){alert("この条件の問題はまだありません。");return;}
  if(kind==="quiz"){window.quizDistractorPool=items;items=items.filter(q=>getDistractors(q,3).length===3);if(!items.length){alert("4択に必要な選択肢が不足しています。");return;}}
- queue=shuffle(items);if(kind==="random")queue=queue.slice(0,Math.min(20,queue.length));idx=0;show("study");renderStudy();
+ queue=shuffle(items);if(kind==="random")queue=queue.slice(0,Math.min(20,queue.length));idx=0;correctCount=0;answeredCount=0;show("study");renderStudy();
 }
 function startQuiz(sub,topic=null,items=null){currentSubject=sub||currentSubject;currentTopic=topic;mode="quiz";queue=shuffle(items||all().filter(q=>q[0]===sub&&(!topic||q[1]===topic)));idx=0;if(!queue.length){alert("問題がありません");return;}show("study");renderStudy();}
 function startFlash(sub,topic=null,items=null){currentSubject=sub||currentSubject;currentTopic=topic;mode="flash";queue=shuffle(items||all().filter(q=>q[0]===sub&&(!topic||q[1]===topic)));idx=0;if(!queue.length){alert("問題がありません");return;}show("study");renderStudy();}
 function renderStudy(){
  const body=document.getElementById("studyBody"),tools=document.getElementById("studyTools");
  if(idx>=queue.length){
-  document.getElementById("studyMode").textContent="COMPLETED";document.getElementById("studyCount").textContent=queue.length+"問 完了";
+  document.getElementById("studyMode").textContent="COMPLETED";
+  const scored=["quiz","tf","fill"].includes(mode);const rate=answeredCount?Math.round(correctCount/answeredCount*100):0;
+  document.getElementById("studyCount").textContent=scored?(queue.length+"問中 "+correctCount+"問正解"):(queue.length+"問 完了");
   document.getElementById("prompt").textContent="おつかれさま！";
   const recap=queue.map((q,i)=>'<li><b>'+escText(q[2])+'</b><span>'+escText(q[3])+'</span></li>').join("");
-  body.innerHTML='<div class="answer">今回の学習は終了です。</div><div class="recap"><h3>覚えておきたい重要ポイント</h3><ol>'+recap+'</ol></div>';
+  body.innerHTML='<div class="answer">今回の学習は終了です。'+(scored?'<div class="session-score"><strong>'+correctCount+' / '+answeredCount+'問正解</strong><span>正答率 '+rate+'％</span></div>':'')+'</div><div class="recap"><h3>覚えておきたい重要ポイント</h3><ol>'+recap+'</ol></div>';
   tools.innerHTML='<button class="btn primary" onclick="backToDetail()">教科に戻る</button><button class="btn" onclick="goHome()">ホームへ</button>';return;
  }
  const q=queue[idx];answered=false;flashRevealed=false;
@@ -622,7 +624,8 @@ function getDistractors(q,count){
 function escText(v){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function revealFlash(){const a=document.getElementById("flashAnswer");a.textContent=queue[idx][3];a.classList.remove("hidden");flashRevealed=true;}
 function recordAnswer(ok,approximate=false){
- const q=queue[idx];
+ const q=queue[idx];answeredCount++;if(ok)correctCount++;
+ const counter=document.getElementById("studyCount");if(counter)counter.textContent=(idx+1)+" / "+queue.length+"　・　正解 "+correctCount+" / "+answeredCount;
  const el=document.getElementById("feedback");if(el)el.innerHTML='<div class="feedback '+(ok?'good':'bad')+'">'+(ok?(approximate?'正解！（表現の違いを考慮）':'正解！'):'不正解。答えを確認しよう。')+'<br><b>正解：</b>'+escText(q[3])+'</div>';
  const n=document.getElementById("nextBtn");if(n)n.disabled=false;
 }
@@ -667,6 +670,11 @@ sessionStyle.textContent=`
 .recap li span{font-size:12px;color:#625b49;margin-top:3px}
 `;
 sessionStyle.textContent+=`
+.session-score{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:14px;padding:14px;border-radius:14px;background:#f1f3f5;color:#20252b}
+.session-score strong{font-size:22px;font-weight:900}
+.session-score span{font-size:13px;font-weight:800;color:#555f69}
+.study-count,.studyCount{font-variant-numeric:tabular-nums}
+
 /* Alignment refinement: stable columns and consistent text baselines */
 .topic-list{grid-template-columns:1fr!important;gap:10px!important}
 .topic{display:grid!important;grid-template-columns:42px minmax(0,1fr) 18px!important;align-items:center!important;column-gap:12px!important;min-height:86px!important;padding:13px 15px!important}
