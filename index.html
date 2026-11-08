@@ -36,7 +36,15 @@ header p{position:relative;z-index:1;margin:0;color:#79652b;font-size:12px;font-
 .muted{font-size:13px;color:var(--muted);line-height:1.8;font-weight:500}
 .progress{height:8px;background:#f1eee4;border-radius:99px;overflow:hidden;margin:14px 0}
 .progress i{display:block;height:100%;background:linear-gradient(90deg,#f3ce4f,#f8df83);width:0;border-radius:99px;transition:width .25s}
-.topic-list{display:grid;gap:10px;margin-top:13px}
+.topic-list{display:grid;grid-template-columns:1fr;gap:11px;margin-top:14px}
+.topic{width:100%;min-height:90px;border:1px solid #eee5cc;border-radius:19px;background:linear-gradient(115deg,#fff 0%,#fffdf7 100%);padding:14px 15px;display:grid;grid-template-columns:42px minmax(0,1fr) 18px;align-items:center;gap:12px;text-align:left;color:var(--ink);box-shadow:0 5px 16px rgba(78,62,15,.045);transition:transform .16s,border-color .16s,box-shadow .16s}
+.topic:hover{border-color:#e5cc71;box-shadow:0 8px 20px rgba(78,62,15,.08)}
+.topic-index{display:grid;place-items:center;width:40px;height:40px;border-radius:14px;background:#fff2c2;color:#8a6a13;font-size:12px;font-weight:900;letter-spacing:.04em}
+.topic:nth-child(3n+2) .topic-index{background:#eaf4eb;color:#4d7955}.topic:nth-child(3n) .topic-index{background:#edf2ff;color:#536a9a}
+.topic-main{display:block;min-width:0}.topic-main b{display:block;font-size:14px;font-weight:900;line-height:1.5;overflow-wrap:anywhere}.topic-meta{display:block;font-size:10px;color:#898473;font-weight:600;margin-top:3px}
+.topic-progress{display:block;height:4px;background:#f0eee7;border-radius:99px;overflow:hidden;margin-top:8px;max-width:220px}.topic-progress i{display:block;height:100%;background:linear-gradient(90deg,#e9c34b,#f6df8d);border-radius:99px}
+.topic-arrow{font-size:25px;color:#b18c2a;text-align:right}
+@media(min-width:600px){.topic-list{grid-template-columns:repeat(2,minmax(0,1fr))}.topic{min-height:104px}}
 .topic{width:100%;border:1px solid var(--line);border-radius:16px;background:#fff;padding:15px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:left;color:var(--ink);box-shadow:0 3px 12px rgba(78,62,15,.035)}
 .topic b{font-size:14px;font-weight:800}.topic span{font-size:11px;color:var(--muted);display:block;margin-top:3px}.topic .arrow{font-size:23px;color:#b28b1e}
 .mode-grid{display:grid;grid-template-columns:1fr;gap:10px;margin:15px 0}
@@ -261,7 +269,7 @@ function openSubject(name){
  const mastered=items.filter(q=>progress[key(q)]?.correct>0).length;
  document.getElementById("subjectProgress").style.width=(items.length?mastered/items.length*100:0)+"%";
  const topics=[...new Set(items.map(q=>q[1]))];
- document.getElementById("topicList").innerHTML=topics.map(t=>'<button class="topic" onclick="selectTopic('+arg(t)+')"><div><b>'+escText(t)+'</b><span>'+items.filter(q=>q[1]===t).length+'問</span></div><span class="arrow">›</span></button>').join("");
+ document.getElementById("topicList").innerHTML=topics.map((t,i)=>{const qs=items.filter(q=>q[1]===t),done=qs.filter(q=>progress[key(q)]?.tries>0).length,rate=qs.length?Math.round(done/qs.length*100):0;return '<button class="topic" onclick="selectTopic('+arg(t)+')"><span class="topic-index">'+String(i+1).padStart(2,"0")+'</span><span class="topic-main"><b>'+escText(t)+'</b><span class="topic-meta">'+qs.length+'問収録 ・ '+done+'問学習済み</span><span class="topic-progress"><i style="width:'+rate+'%"></i></span></span><span class="topic-arrow">›</span></button>'}).join("");
  document.getElementById("topicList").classList.remove("hidden");
  document.getElementById("topicStage").classList.remove("hidden");
  document.getElementById("formatStage").classList.add("hidden");
