@@ -3,115 +3,48 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#e9b928">
-<title>副教科対策</title>
+<meta name="theme-color" content="#176b50">
+<title>副教科 TEST LAB</title>
 <style>
 
-:root{--bg:#f5f6f8;--paper:#fff;--ink:#20242b;--muted:#77808c;--line:#e4e7ec;--accent:#e0ad16;--accent-dark:#a87900;--soft:#fff5d6;--good:#16845b;--bad:#c94d4d}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif;line-height:1.65}
-button,input{font:inherit}button{cursor:pointer}
-.app{max-width:980px;margin:0 auto;padding:0 22px 64px}
-header{height:66px;border-bottom:1px solid var(--line);background:#ffffffed;backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:space-between;padding:0 max(22px,calc((100% - 980px)/2));position:sticky;top:0;z-index:5;margin:0 calc((980px - 100vw)/2) 0}
-.brand{font-weight:850;letter-spacing:.08em;font-size:15px}.brand span{color:var(--accent-dark)}
-.header-note{font-size:12px;color:var(--muted)}
-main{padding-top:38px}
-.eyebrow,.card-label{font-size:11px;font-weight:800;letter-spacing:.16em;color:var(--accent-dark);text-transform:uppercase}
-h1{font-size:clamp(27px,5vw,38px);line-height:1.25;letter-spacing:-.04em;margin:9px 0 10px}
-.lead{color:var(--muted);margin:0 0 28px;font-size:14px}
-.section-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:30px 0 14px}
-.section-head h2{font-size:17px;margin:0;letter-spacing:-.02em}
-.section-head small,.muted{font-size:12px;color:var(--muted)}
-.subjects{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.subject{border:1px solid var(--line);border-radius:16px;background:var(--paper);padding:17px;text-align:left;transition:.16s;min-height:116px;display:flex;flex-direction:column;justify-content:space-between;color:var(--ink)}
-.subject:hover{border-color:#e4c45f;transform:translateY(-2px);box-shadow:0 8px 24px #1d2d5010}
-.subject:active,.btn:active,.topic:active,.choice:active{transform:scale(.985)}
-.subject-top{display:flex;align-items:center;justify-content:space-between}
-.subject .emoji{font-size:22px}.tag{font-size:10px;color:var(--accent-dark);background:var(--soft);border-radius:99px;padding:4px 9px}
-.subject h3{font-size:16px;margin:9px 0 3px}.subject p{font-size:12px;color:var(--muted);margin:0;line-height:1.5}
-.panel{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:22px;margin-top:18px}
-.hidden{display:none!important}
-.back{border:0;background:none;color:var(--accent-dark);padding:0;margin:0 0 18px;font-size:13px;font-weight:750}
-.back:hover{color:#775400}
-.mode-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:16px}
-.topic-list{display:grid;gap:10px;margin-top:16px}
-.topic{border:1px solid var(--line);border-radius:13px;background:#fff;padding:13px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px}
-.topic-name{min-width:0}.topic-name b{display:block;font-size:13px}.topic-name small{font-size:11px;color:var(--muted)}
-.topic-actions{display:flex;gap:7px;flex:none}
-.btn{border:1px solid var(--line);background:white;color:var(--ink);padding:10px 14px;border-radius:11px;font-weight:750;font-size:13px;min-height:42px}
-.btn.primary{background:var(--accent);border-color:var(--accent);color:#302600}
-.btn.primary:hover{background:#edc34a}
-.btn.soft{background:var(--soft);border-color:#f1dfaa;color:#795900}
-.toolbar{display:flex;flex-wrap:wrap;gap:9px;margin-top:16px}
-.progress{height:6px;background:#edf0f4;border-radius:99px;overflow:hidden;margin:12px 0 22px}
-.progress i{display:block;height:100%;background:var(--accent);width:0;transition:.2s}
-.question{font-size:clamp(21px,4vw,28px);font-weight:780;line-height:1.5;margin:10px 0 22px;overflow-wrap:anywhere}
-.answer{font-size:16px;line-height:1.8;background:var(--soft);border:1px solid #f1dfaa;padding:17px;border-radius:13px;margin:14px 0;white-space:pre-wrap}
-.choices{display:grid;gap:10px}
-.choice{border:1px solid var(--line);border-radius:12px;background:white;padding:14px 15px;text-align:left;font-size:14px;line-height:1.5;min-height:52px;display:flex;align-items:center;gap:12px}
-.choice:hover{border-color:#e4c45f;background:#fffdf7}
-.choice:disabled{cursor:default}.choice.correct{border-color:#79c5a5;background:#effaf5}.choice.wrong{border-color:#e7a0a0;background:#fff4f4}
-.choice-letter{width:26px;height:26px;display:grid;place-items:center;border-radius:8px;background:#f1f2f4;color:#59616b;font-size:11px;font-weight:800;flex:none}
-.feedback{padding:13px 15px;border-radius:12px;margin-top:14px;font-size:13px;line-height:1.6}
-.feedback.good{background:#effaf5;color:#116b49}.feedback.bad{background:#fff2f2;color:#a63737}
-.empty{padding:24px;text-align:center;color:var(--muted);font-size:13px}
-footer{text-align:center;color:#98a0a8;font-size:11px;padding:28px 0 0}
+:root{--bg:#f5f6f8;--paper:#fff;--ink:#20242b;--muted:#77808c;--line:#e4e7ec;--accent:#e0ad16;--accent-dark:#8b6700;--soft:#fff5d6}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif;line-height:1.6}button,input{font:inherit}button{cursor:pointer}
+.app{max-width:900px;margin:auto;padding:0 20px 48px}header{height:64px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 max(20px,calc((100% - 900px)/2));position:sticky;top:0;z-index:5;margin:0 calc((900px - 100vw)/2)}
+.brand{font-weight:900;letter-spacing:.07em;font-size:15px}.brand-mark{display:inline-grid;place-items:center;width:27px;height:27px;border-radius:8px;background:var(--accent);color:#302600;margin-right:8px;font-size:15px}.header-note{font-size:12px;color:var(--muted)}
+main{padding-top:32px}.hero{padding-bottom:10px}.eyebrow,.card-label{font-size:10px;font-weight:850;letter-spacing:.16em;color:var(--accent-dark)}h1{font-size:clamp(26px,5vw,35px);line-height:1.3;margin:8px 0}.hero p,.muted{font-size:13px;color:var(--muted)}
+.stats,.actions{display:none!important}.section-head{display:flex;align-items:center;justify-content:space-between;margin:26px 0 13px}.section-head h2{font-size:17px;margin:0}.section-head small{font-size:10px;color:var(--muted);letter-spacing:.14em}
+.subjects{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.subject{background:#fff;border:1px solid var(--line);border-radius:15px;padding:16px;text-align:left;min-height:122px;transition:.16s;color:var(--ink)}.subject:hover{border-color:#e4c45f;transform:translateY(-2px);box-shadow:0 8px 22px #2221}.subject:active,.btn:active,.topic:active{transform:scale(.985)}
+.subject .emoji{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:var(--soft);font-size:20px}.subject h3{font-size:15px;margin:10px 0 3px}.subject p{font-size:11px;color:var(--muted);margin:0;line-height:1.5}.subject .count{font-size:10px;color:var(--accent-dark);font-weight:800;margin-top:10px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:19px;margin-top:14px}.hidden{display:none!important}.back{border:0;background:none;color:var(--accent-dark);font-weight:750;padding:0;margin:0 0 15px}#detailTitle{font-size:24px;margin:4px 0}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}.btn{border:1px solid var(--line);background:#fff;color:var(--ink);padding:10px 14px;border-radius:10px;min-height:43px;font-size:13px;font-weight:750}.btn.primary{background:var(--accent);border-color:var(--accent);color:#302600}.btn.soft{background:var(--soft);border-color:#f1dfaa;color:#795900}
+.topic-list{display:grid;gap:9px;margin-top:14px}.topic{width:100%;border:1px solid var(--line);border-radius:11px;background:#fff;padding:13px;display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:left}.topic b{font-size:13px}.topic span{font-size:11px;color:var(--muted);white-space:nowrap}
+.progress{height:6px;background:#edf0f4;border-radius:99px;overflow:hidden;margin:12px 0 18px}.progress i{display:block;height:100%;background:var(--accent);width:0}.question{font-size:clamp(20px,4vw,26px);font-weight:780;line-height:1.5;margin:17px 0;overflow-wrap:anywhere}.answer{background:var(--soft);border:1px solid #f1dfaa;border-radius:12px;padding:15px;margin:13px 0;white-space:pre-wrap;line-height:1.8}
+.choice{width:100%;border:1px solid var(--line);border-radius:11px;background:#fff;padding:13px;margin:5px 0;text-align:left;min-height:50px;font-size:14px}.choice:hover{border-color:#e4c45f;background:#fffdf7}.choice:disabled{cursor:default}.choice.correct{background:#effaf5;border-color:#79c5a5}.choice.wrong{background:#fff2f2;border-color:#e7a0a0}.feedback{padding:12px;border-radius:10px;margin-top:11px;font-size:13px}.feedback.good{background:#effaf5;color:#116b49}.feedback.bad{background:#fff2f2;color:#a63737}
 button:focus-visible{outline:3px solid #e4bd43;outline-offset:3px}
-@media(min-width:720px){.subjects{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(max-width:560px){
- .app{padding:0 16px 42px}header{padding:0 16px;margin:0 -16px}main{padding-top:28px}
- .subject{padding:14px;min-height:112px}.panel{padding:17px}
- .topic{align-items:flex-start;flex-direction:column}.topic-actions{width:100%}.topic-actions .btn{flex:1}
- .toolbar .btn{flex:1}.question{font-size:20px}
-}
+@media(min-width:700px){.subjects{grid-template-columns:repeat(4,minmax(0,1fr))}}@media(max-width:560px){.app{padding:0 16px 38px}header{padding:0 16px;margin:0 -16px}main{padding-top:25px}.panel{padding:15px}.subject{padding:14px;min-height:116px}}
 
 </style>
 </head>
 <body>
 <div class="app">
-<header><div class="brand">副教科 <span>QUIZ</span></div><div class="header-note">後期中間テスト対策</div></header>
+<header><div class="brand"><span class="brand-mark">Q</span>副教科 QUIZ</div><div class="header-note">後期中間テスト対策</div></header>
 <main id="home">
-<section>
- <div class="eyebrow">TEST PREPARATION</div>
- <h1>副教科のテスト対策</h1>
- <p class="lead">教科を選んで、単元ごとに練習しよう。</p>
-</section>
-<div class="section-head"><h2>教科を選ぶ</h2><small>SUBJECTS</small></div>
+<section class="hero"><div class="eyebrow">GRADE 9 / 2026</div><h1>覚えるだけで終わらせない。<br>解けるまで、繰り返す。</h1><p>保健体育・技術・家庭・美術のテスト対策を、<br>単語帳と4択問題で効率よく。</p></section>
+<div class="stats"><div class="stat"><strong id="totalCount">0</strong><span>収録問題</span></div><div class="stat"><strong id="doneCount">0</strong><span>解答した問題</span></div><div class="stat"><strong id="weakCount">0</strong><span>苦手登録</span></div></div>
+<div class="section-head"><h2>教科から学習する</h2><small>SUBJECTS</small></div>
 <div class="subjects" id="subjects"></div>
-<div id="weakEntry" class="hidden" style="margin-top:18px">
- <button class="btn soft" style="width:100%" onclick="startWeak()">間違えた問題を復習する →</button>
-</div>
 </main>
-<section id="detail" class="hidden">
- <button class="back" onclick="goHome()">← 教科一覧へ</button>
- <div class="eyebrow">SELECT A TOPIC</div>
- <h1 id="detailTitle"></h1>
- <p class="lead" id="detailDesc"></p>
- <div class="section-head"><h2>単元を選ぶ</h2></div>
- <div class="topic-list" id="topicList"></div>
-</section>
-<section id="study" class="hidden">
- <button class="back" onclick="confirmStudyLeave()">← 単元一覧へ</button>
- <div class="panel">
-  <div class="question-meta" style="display:flex;justify-content:space-between;gap:10px;color:var(--muted);font-size:12px">
-   <span id="studyMode">PRACTICE</span><span id="studyCount"></span>
-  </div>
-  <div class="progress"><i id="studyProgress"></i></div>
-  <div class="eyebrow">QUESTION</div>
-  <div class="question" id="prompt"></div>
-  <div id="studyBody"></div>
-  <div class="toolbar" id="studyTools"></div>
- </div>
-</section>
-
-<footer>副教科対策アプリ</footer>
+<section id="detail" class="hidden"><button class="back" onclick="goHome()">← ホームに戻る</button><div class="panel"><div class="card-label">SUBJECT</div><h2 id="detailTitle"></h2><p class="muted" id="detailDesc"></p><div class="progress"><i id="subjectProgress"></i></div><div class="toolbar"><button class="btn primary" onclick="startQuiz(currentSubject)">4択問題を解く</button><button class="btn soft" onclick="startFlash(currentSubject)">単語帳で確認</button></div><div class="topic-list" id="topicList"></div></div></section>
+<section id="study" class="hidden"><button class="back" onclick="backToDetail()">← 戻る</button><div class="panel"><div class="card-label" id="studyMode">PRACTICE</div><div class="muted" id="studyCount"></div><div class="progress"><i id="studyProgress"></i></div><div class="question" id="prompt"></div><div id="studyBody"></div><div class="toolbar" id="studyTools"></div></div></section>
+<section id="custom" class="hidden"><button class="back" onclick="goHome()">← ホームに戻る</button><div class="panel"><div class="card-label">CUSTOM CONTENT</div><h2>自分の問題を追加</h2><p class="muted">授業で強調された内容や、プリントの空欄を登録しよう。追加した内容も単語帳・4択に反映されます。</p><label class="muted">教科</label><select id="cSubject" class="field"><option>保健体育</option><option>技術</option><option>家庭</option><option>美術</option></select><label class="muted">単元名</label><input id="cTopic" class="field" placeholder="例：情報セキュリティ"><label class="muted">問題・用語</label><input id="cQ" class="field" placeholder="例：情報セキュリティの三要素は？"><label class="muted">答え</label><input id="cA" class="field" placeholder="例：機密性・完全性・可用性"><button class="btn primary" onclick="addCustom()">この問題を追加</button><div id="customMsg" class="muted"></div><hr style="border:0;border-top:1px solid var(--line);margin:20px 0"><h3 style="font-size:14px">自分で追加した問題</h3><div id="customList"></div></div></section>
+<footer>STUDY TOOL · 学習データはこの端末のブラウザ内に保存されます</footer>
 </div>
 <script>
 const subjects=[
- {name:"保健体育",emoji:"🏃",desc:"感染症・医薬品・保健医療・バレーボール",topics:["感染症と予防","医薬品・保健医療"]},
- {name:"技術",emoji:"💻",desc:"情報モラル・知的財産権・セキュリティ・プログラム",topics:["情報モラル・知的財産権","情報セキュリティ","双方向性・計測制御"]},
- {name:"家庭",emoji:"🛒",desc:"購入・支払い・消費者トラブル・家族と幼児",topics:["購入・支払い・金銭管理","消費者トラブル・権利と責任","中学生の自立・幼児の生活"]},
- {name:"美術",emoji:"🎨",desc:"想像の世界・仏像・美術史・現代美術",topics:["想像の世界・作品と作家","仏像に込めた思い","近代・現代の芸術表現"]}
+ {name:"保健体育",emoji:"＋",desc:"感染症・医薬品・保健医療・バレーボール",topics:["感染症と予防","医薬品・保健医療"]},
+ {name:"技術",emoji:"⌘",desc:"情報モラル・知的財産権・セキュリティ・プログラム",topics:["情報モラル・知的財産権","情報セキュリティ","双方向性・計測制御"]},
+ {name:"家庭",emoji:"⌂",desc:"購入・支払い・消費者トラブル・家族と幼児",topics:["購入・支払い・金銭管理","消費者トラブル・権利と責任","中学生の自立・幼児の生活"]},
+ {name:"美術",emoji:"◈",desc:"想像の世界・仏像・美術史・現代美術",topics:["想像の世界・作品と作家","仏像に込めた思い","近代・現代の芸術表現"]}
 ];
 const base=[
 ["保健体育","感染症と予防","飛まつ感染","人のくしゃみや咳などの飛まつによって感染すること。"],
@@ -222,37 +155,44 @@ let weak=JSON.parse(localStorage.getItem("副教科_weak")||"[]");
 let currentSubject="",currentTopic="",queue=[],idx=0,mode="",answered=false,flashRevealed=false;
 const all=()=>base.concat(custom);
 function save(){localStorage.setItem("副教科_custom",JSON.stringify(custom));localStorage.setItem("副教科_progress",JSON.stringify(progress));localStorage.setItem("副教科_weak",JSON.stringify(weak))}
-function show(id){["home","detail","study"].forEach(x=>document.getElementById(x).classList.toggle("hidden",x!==id))}
+function show(id){["home","detail","study","custom"].forEach(x=>document.getElementById(x).classList.toggle("hidden",x!==id))}
 function goHome(){show("home");renderHome()}
-function renderHome(){
- document.getElementById("subjects").innerHTML=subjects.map(s=>`<button class="subject" onclick="openSubject('${s.name}')"><div class="subject-top"><span class="emoji">${s.emoji}</span><span class="tag">${all().filter(q=>q[0]===s.name).length}問</span></div><h3>${s.name}</h3><p>${s.desc}</p></button>`).join("");
- document.getElementById("weakEntry").classList.toggle("hidden",weak.length===0);
+function renderHome(){document.getElementById("totalCount").textContent=all().length;document.getElementById("doneCount").textContent=Object.keys(progress).filter(k=>progress[k].tries>0).length;document.getElementById("weakCount").textContent=weak.length;
+ document.getElementById("subjects").innerHTML=subjects.map(s=>`<button class="subject" onclick="openSubject('${s.name}')"><div class="emoji">${s.emoji}</div><h3>${s.name}</h3><p>${s.desc}</p><div class="count">${all().filter(q=>q[0]===s.name).length} ITEMS　→</div></button>`).join("")}
+function filterSubjects(term){
+ let q=term.trim().toLowerCase();
+ document.querySelectorAll("#subjects .subject").forEach((el)=>{
+   let name=el.querySelector("h3").textContent;
+   let desc=el.querySelector("p").textContent;
+   let topics=(subjects.find(s=>s.name===name)?.topics||[]).join(" ");
+   el.classList.toggle("hidden",!!q&&!(name+desc+topics).toLowerCase().includes(q));
+ });
 }
-
-function openSubject(name){
- currentSubject=name;
- let s=subjects.find(x=>x.name===name),items=all().filter(q=>q[0]===name);
- document.getElementById("detailTitle").textContent=s.name;
- document.getElementById("detailDesc").textContent=s.desc;
- document.getElementById("topicList").innerHTML=s.topics.map(t=>{
-   let n=items.filter(q=>q[1]===t).length;
-   return `<div class="topic"><div class="topic-name"><b>${t}</b><small>${n}問</small></div><div class="topic-actions"><button class="btn soft" onclick="startFlash('${name}','${t}')">単語帳</button><button class="btn primary" onclick="startQuiz('${name}','${t}')">4択クイズ</button></div></div>`;
- }).join("");
- show("detail");
-}
-function confirmStudyLeave(){if(confirm("学習を終了して単元一覧に戻りますか？"))backToDetail()}
+function openSubject(name){currentSubject=name;let s=subjects.find(x=>x.name===name),items=all().filter(q=>q[0]===name);document.getElementById("detailTitle").textContent=s.name;document.getElementById("detailDesc").textContent=s.desc;let mastered=items.filter(q=>progress[key(q)]?.correct>0).length;document.getElementById("subjectProgress").style.width=(items.length?mastered/items.length*100:0)+"%";
+ document.getElementById("topicList").innerHTML=s.topics.map(t=>`<div class="topic"><div><b>${t}</b><span style="display:block">${items.filter(q=>q[1]===t).length}問</span></div><div style="display:flex;gap:7px"><button class="btn soft" onclick="startFlash(\'${name}\',\'${t}\')">単語帳</button><button class="btn primary" onclick="startQuiz(\'${name}\',\'${t}\')">4択</button></div></div>`).join("");show("detail")}
 function key(q){return q[0]+"|"+q[1]+"|"+q[2]}
-
+function openTopic(t){currentTopic=t;let a=all().filter(q=>q[0]===currentSubject&&q[1]===t);queue=a;startFlash(currentSubject,t)}
+function backToDetail(){if(currentSubject)openSubject(currentSubject);else goHome()}
+function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
+function startQuiz(sub,topic=null,items=null){mode="quiz";queue=shuffle(items||all().filter(q=>q[0]===sub&&(!topic||q[1]===topic)));idx=0;currentSubject=sub;currentTopic=topic;show("study");renderStudy()}
+function startFlash(sub,topic=null,items=null){mode="flash";queue=shuffle(items||all().filter(q=>q[0]===sub&&(!topic||q[1]===topic)));idx=0;currentSubject=sub;currentTopic=topic;show("study");renderStudy()}
+function startWeak(){let items=all().filter(q=>weak.includes(key(q)));if(!items.length){alert("苦手問題はまだありません。4択問題に挑戦してみよう！");return}startQuiz("",null,items)}
+function renderStudy(){if(idx>=queue.length){document.getElementById("studyMode").textContent="COMPLETED";document.getElementById("studyCount").textContent=`${queue.length}問 完了`;document.getElementById("studyProgress").style.width="100%";document.getElementById("prompt").textContent="おつかれさま！";document.getElementById("studyBody").innerHTML='<p class="muted">最後まで取り組めました。間違えた問題は苦手復習に登録されています。</p>';document.getElementById("studyTools").innerHTML='<button class="btn primary" onclick="backToDetail()">教科に戻る</button><button class="btn" onclick="goHome()">ホームへ</button>';return}
+ let q=queue[idx];answered=false;flashRevealed=false;document.getElementById("studyMode").textContent=mode==="quiz"?"4 CHOICE QUIZ":"FLASH CARD";document.getElementById("studyCount").textContent=`${idx+1} / ${queue.length}　・　${q[0]} / ${q[1]}`;document.getElementById("studyProgress").style.width=(idx/queue.length*100)+"%";document.getElementById("prompt").textContent=q[2];document.getElementById("studyTools").innerHTML="";
+ if(mode==="flash"){document.getElementById("studyBody").innerHTML='<div id="flashAnswer" class="answer hidden"></div><button class="btn primary" onclick="revealFlash()">答えを見る</button>';document.getElementById("studyTools").innerHTML='<button class="btn soft" onclick="markWeak()">苦手に登録</button><button class="btn" onclick="next()">次へ →</button>'}
+ else{let distractors=shuffle(all().filter(x=>x[0]===q[0]&&x[2]!==q[2]&&x[3]!==q[3])).slice(0,3).map(x=>x[3]);let opts=shuffle([q[3],...distractors]);if(opts.length<4){let extras=["該当しない","どれも正しくない","プリントに記載なし"];opts=shuffle([...opts,...extras.slice(0,4-opts.length)])}
+ document.getElementById("studyBody").innerHTML='<div class="choices">'+opts.map((o,i)=>`<button class="choice" onclick="choose(this,${JSON.stringify(o).replace(/"/g,'&quot;')})">${["A","B","C","D"][i]}　${o}</button>`).join("")+'</div><div id="feedback"></div>';document.getElementById("studyTools").innerHTML='<button class="btn soft" onclick="markWeak()">苦手に登録</button><button class="btn" id="nextBtn" disabled onclick="next()">次の問題 →</button>'}
+}
 function revealFlash(){let q=queue[idx];let a=document.getElementById("flashAnswer");a.textContent=q[3];a.classList.remove("hidden");flashRevealed=true}
 function choose(btn,val){if(answered)return;answered=true;let q=queue[idx],ok=val===q[3];document.querySelectorAll(".choice").forEach(b=>{b.disabled=true;if(b.textContent.includes(q[3]))b.classList.add("correct")});if(!ok)btn.classList.add("wrong");let k=key(q),p=progress[k]||{tries:0,correct:0};p.tries++;if(ok)p.correct++;progress[k]=p;if(!ok&&!weak.includes(k))weak.push(k);save();document.getElementById("feedback").innerHTML=`<div class="feedback ${ok?"good":"bad"}">${ok?"正解！":"不正解。正解は「"+q[3]+"」"}<br><span style="font-weight:400">${q[0]} / ${q[1]}</span></div>`;document.getElementById("nextBtn").disabled=false}
-function markWeak(){let k=key(queue[idx]);if(!weak.includes(k)){weak.push(k);save()}let b=document.getElementById("markWeakBtn");if(b){b.textContent="登録済み";b.disabled=true}}
+function markWeak(){let k=key(queue[idx]);if(!weak.includes(k)){weak.push(k);save()}alert("苦手問題に登録しました！")}
 function next(){idx++;renderStudy()}
 function openCustom(){show("custom");renderCustom()}
 function addCustom(){let s=document.getElementById("cSubject").value,t=document.getElementById("cTopic").value.trim(),q=document.getElementById("cQ").value.trim(),a=document.getElementById("cA").value.trim();if(!t||!q||!a){document.getElementById("customMsg").textContent="単元名・問題・答えをすべて入力してください。";return}custom.push([s,t,q,a]);save();["cTopic","cQ","cA"].forEach(id=>document.getElementById(id).value="");document.getElementById("customMsg").textContent="追加しました！";renderCustom();renderHome()}
 function renderCustom(){let el=document.getElementById("customList");el.innerHTML=custom.length?custom.map((q,i)=>`<div class="topic"><div><b>${q[2]}</b><div class="muted">${q[0]} / ${q[1]}</div></div><button class="btn danger" onclick="deleteCustom(${i})">削除</button></div>`).join(""):'<div class="empty">追加した問題はまだありません。</div>'}
 function deleteCustom(i){if(confirm("この問題を削除しますか？")){custom.splice(i,1);save();renderCustom();renderHome()}}
-function exportData(){let data={app:"副教科 QUIZ",version:1,custom,progress,weak};let blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});let a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="副教科_TEST_LAB_backup.json";a.click();URL.revokeObjectURL(a.href)}
-function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let d=JSON.parse(r.result);if(!Array.isArray(d.custom)||!d.progress||!Array.isArray(d.weak))throw Error();if(!confirm("現在の学習データをバックアップ内容で置き換えますか？"))return;custom=d.custom;progress=d.progress;weak=d.weak;save();renderHome();alert("復元しました！")}catch(err){alert("読み込めませんでした。副教科 QUIZ のバックアップJSONを選んでください。")}};r.readAsText(f);e.target.value=""}
+function exportData(){let data={app:"副教科 TEST LAB",version:1,custom,progress,weak};let blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});let a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="副教科_TEST_LAB_backup.json";a.click();URL.revokeObjectURL(a.href)}
+function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let d=JSON.parse(r.result);if(!Array.isArray(d.custom)||!d.progress||!Array.isArray(d.weak))throw Error();if(!confirm("現在の学習データをバックアップ内容で置き換えますか？"))return;custom=d.custom;progress=d.progress;weak=d.weak;save();renderHome();alert("復元しました！")}catch(err){alert("読み込めませんでした。副教科 TEST LAB のバックアップJSONを選んでください。")}};r.readAsText(f);e.target.value=""}
 renderHome();
 </script>
 </body></html>
