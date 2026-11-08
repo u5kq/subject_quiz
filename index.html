@@ -354,7 +354,7 @@ function selectTopic(topic){
  currentTopic=topic;document.getElementById("selectedTopicTitle").textContent=topic;
  const items=all().filter(q=>q[0]===currentSubject&&q[1]===topic);
  const modes=[
- ["mix","ランダム出題","↻","いろいろな形式を組み合わせて出題","全"+items.length+"問から出題"],
+ ["random","ランダム問題","↻","一問一答形式で問題をランダムな順番に出題","全"+items.length+"問から出題"],
  ["quiz","4択問題","A","4つの選択肢から正しい答えを選ぶ","知識の確認におすすめ"],
  ["tf","○×問題","○","説明が正しいかどうかを判断する","短時間で反復"],
  ["fill","記述・穴埋め","✎","答えを自分で入力して確認する","表現の違いも考慮して判定"],
@@ -368,7 +368,7 @@ function launch(sub,topic,kind){
  currentSubject=sub||currentSubject;currentTopic=topic;mode=kind;
  let items=all().filter(q=>(!sub||q[0]===sub)&&(!topic||q[1]===topic));
  if(!items.length){alert("この条件の問題はまだありません。");return;}
- queue=shuffle(items);if(kind==="mix")queue=queue.slice(0,Math.min(20,queue.length));
+ queue=shuffle(items);if(kind==="random")queue=queue.slice(0,Math.min(20,queue.length));
  idx=0;show("study");renderStudy();
 }
 function startQuiz(sub,topic=null,items=null){currentSubject=sub||currentSubject;currentTopic=topic;mode="quiz";queue=shuffle(items||all().filter(q=>q[0]===sub&&(!topic||q[1]===topic)));idx=0;if(!queue.length){alert("問題がありません");return;}show("study");renderStudy();}
@@ -382,11 +382,11 @@ function renderStudy(){
   tools.innerHTML='<button class="btn primary" onclick="backToDetail()">教科に戻る</button><button class="btn" onclick="goHome()">ホームへ</button>';return;
  }
  const q=queue[idx];answered=false;flashRevealed=false;
- document.getElementById("studyMode").textContent=({mix:"RANDOM MIX",quiz:"4 CHOICE",tf:"TRUE / FALSE",fill:"FILL IN",flash:"FLASH CARD"})[mode]||"PRACTICE";
+ document.getElementById("studyMode").textContent=({random:"RANDOM Q&A",quiz:"4 CHOICE",tf:"TRUE / FALSE",fill:"FILL IN",flash:"FLASH CARD"})[mode]||"PRACTICE";
  document.getElementById("studyCount").textContent=(idx+1)+" / "+queue.length+"　・　"+q[0]+" / "+q[1];
  document.getElementById("studyProgress").style.width=(idx/queue.length*100)+"%";
  document.getElementById("prompt").textContent=q[2];tools.innerHTML='';
- let actual=mode;if(mode==="mix")actual=shuffle(["quiz","tf","fill","flash"])[0];
+ let actual=mode;if(mode==="random")actual="flash";
  if(actual==="flash"){body.innerHTML='<div id="flashAnswer" class="answer hidden"></div><button class="btn primary" onclick="revealFlash()">答えを見る</button>';tools.insertAdjacentHTML("beforeend",'<button class="btn" onclick="next()">次の問題 →</button>');return;}
  if(actual==="quiz"){
   const distractors=getDistractors(q,3);
