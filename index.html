@@ -132,6 +132,33 @@ header{padding:27px 22px 32px}header h1{font-size:30px;font-weight:850}header p{
 .field{font-size:16px;min-height:54px;border-color:#c9c2ae}.toolbar .btn{min-height:48px}
 button:focus-visible,input:focus-visible{outline:3px solid #8b6900;outline-offset:3px}
 @media(max-width:390px){.app{padding:0 14px 36px}header{margin:0 -14px 18px;padding:23px 17px 27px}header h1{font-size:27px}.subject{padding:14px;min-height:133px}.panel{padding:16px}.choice{font-size:15px}}
+
+/* Subject identity: restrained, consistent subject colors */
+.subject{border-top:3px solid var(--subject-color,#e1d9c2);position:relative}
+.subject:nth-child(1){--subject-color:#4e9a68;--subject-soft:#e8f4eb;--subject-ink:#28603c}
+.subject:nth-child(2){--subject-color:#5685c4;--subject-soft:#eaf1fb;--subject-ink:#315b91}
+.subject:nth-child(3){--subject-color:#d58a45;--subject-soft:#fbf0e5;--subject-ink:#8a4e1d}
+.subject:nth-child(4){--subject-color:#9170b8;--subject-soft:#f2ecf8;--subject-ink:#65468c}
+.subject:nth-child(5){--subject-color:#d0a92e;--subject-soft:#fbf5df;--subject-ink:#765c12}
+.subject .emoji{background:var(--subject-soft)!important;color:var(--subject-ink)!important;filter:none!important;border:1px solid color-mix(in srgb,var(--subject-color) 22%,white);font-size:21px}
+.subject h3{color:var(--subject-ink)}
+.subject .count{color:var(--subject-ink);font-weight:800}
+.subject:focus-visible{outline:3px solid var(--subject-color);outline-offset:3px}
+#detail[data-subject="保健体育"]{--topic-color:#4e9a68;--topic-soft:#e8f4eb;--topic-ink:#28603c}
+#detail[data-subject="技術"]{--topic-color:#5685c4;--topic-soft:#eaf1fb;--topic-ink:#315b91}
+#detail[data-subject="家庭"]{--topic-color:#d58a45;--topic-soft:#fbf0e5;--topic-ink:#8a4e1d}
+#detail[data-subject="美術"]{--topic-color:#9170b8;--topic-soft:#f2ecf8;--topic-ink:#65468c}
+#detail[data-subject="音楽"]{--topic-color:#d0a92e;--topic-soft:#fbf5df;--topic-ink:#765c12}
+#detail .topic{border-left:4px solid var(--topic-color,#d0b34d);background:#fff}
+#detail .topic-index{background:var(--topic-soft,#f5f1e5);color:var(--topic-ink,#65531e);font-weight:900}
+#detail .topic-progress i{background:var(--topic-color,#d0b34d)}
+#detail .topic-arrow{color:var(--topic-ink,#65531e)}
+#detail .back{background:var(--topic-soft,#fff1b8);border-color:color-mix(in srgb,var(--topic-color,#d0b34d) 30%,white);color:var(--topic-ink,#604800)}
+/* Keep the rest of the interface calm and readable */
+.section-head small,.card-label{color:#625b49}
+.subject p,.topic-meta,.mode-copy small{color:#505148}
+@media(prefers-reduced-motion:no-preference){.subject,.topic,.mode-card{transition:transform .14s ease,border-color .14s ease,box-shadow .14s ease}.subject:hover{transform:translateY(-2px);box-shadow:0 5px 14px rgba(30,30,20,.07)}}
+
 </style>
 <meta name="theme-color" content="#f5d45e">
 <meta name="description" content="中学3年生向けの副教科クイズ学習アプリ">
@@ -310,6 +337,7 @@ function renderHome(){
 }
 function openSubject(name){
  currentSubject=name;currentTopic=null;
+ document.getElementById("detail").dataset.subject=name;
  const s=subjects.find(x=>x.name===name),items=all().filter(q=>q[0]===name);
  document.getElementById("detailTitle").textContent=name;
  document.getElementById("detailDesc").textContent=s.desc+" ／ "+items.length+"問";
