@@ -372,7 +372,7 @@ const base=[
 ["保健体育","感染症と予防","医薬品の副作用","目的以外の好ましくない作用。体質や病気の状態などが関係する。"],
 ["保健体育","医薬品・保健医療","処方薬を他人に使ったり、残った薬を使ったりしてはいけない理由","個人の状態や体重に合わせて処方されており、健康に悪影響を及ぼすおそれがあるため。"],
 ["保健体育","医薬品・保健医療","OTC薬とは","処方箋がなくても、ドラッグストアやコンビニなどで購入できる一般用医薬品。"],
-["技術・家庭","情報モラル・知的財産権","知的財産権とは","知的な創造活動や発明などから生まれた成果を守る権利。"],
+["技術","情報モラル・知的財産権","知的財産権とは","知的な創造活動や発明などから生まれた成果を守る権利。"],
 ["技術","情報モラル・知的財産権","著作権が関わる著作物の例","文学・音楽・写真・絵画・映画など。"],
 ["技術","情報モラル・知的財産権","著作権（財産権）とは","文字や音、色などで表現した著作物を、他者に勝手に利用されないための権利。"],
 ["技術","情報モラル・知的財産権","著作者人格権とは","著作物の公表や著作者名の表記などを、著作者が決定する権利。"],
@@ -400,7 +400,7 @@ const base=[
 ["技術","双方向性・計測制御","計測・制御システムとは","センサーで光・温度・距離などを計測し、プログラムによってコンピュータが機器の動作を制御する仕組み。"],
 ["技術","双方向性・計測制御","センサーの役割","光や温度、距離などを計測すること。"],
 ["技術","双方向性・計測制御","計測・制御システムで制御するもの","目的の仕事を自動的に行うための、モータなど仕事を行う部分の動作。"],
-["技術・家庭","購入・支払い・金銭管理","店舗販売のメリット","実物を見て決められる、試着できる、サイズが分かりやすい、すぐ買える、店員に情報を聞ける。"],
+["家庭","購入・支払い・金銭管理","店舗販売のメリット","実物を見て決められる、試着できる、サイズが分かりやすい、すぐ買える、店員に情報を聞ける。"],
 ["家庭","購入・支払い・金銭管理","店舗販売のデメリット","店に行く手間、買える時間が決まっている、店になければ別店舗に行く必要があるなど。"],
 ["家庭","購入・支払い・金銭管理","無店舗販売のメリット","手軽に買える、買いたい時に利用できる、さまざまな商品を見られる、比較できる。"],
 ["家庭","購入・支払い・金銭管理","無店舗販売のデメリット","実物を見られない、届くまで時間がかかる、送料がかかるなど。"],
@@ -747,7 +747,7 @@ function openSubjectSection(branch){
 function openSocialCategory(category){
  currentParentSubject="社会";currentBranch=category;currentSubject="社会";currentTopic=null;
  const allSocial=all().filter(q=>q[0]==="社会");
- const patterns={地理:/地理|世界|日本の地域|気候|地形|産業|人口|地図/,歴史:/第二次世界大戦|戦後|歴史|時代|日本と世界/,公民:/現代社会|日本国憲法|憲法|政治|経済|人権/};
+ const patterns={地理:/^地理|地理|世界|日本の地域|気候|地形|産業|人口|地図/,歴史:/^歴史|第二次世界大戦|戦後|歴史|時代|日本と世界/,公民:/^公民|公民|現代社会|日本国憲法|憲法|政治|経済|人権/};
  let items=allSocial.filter(q=>patterns[category].test(q[1]+" "+q[2]));
  activeTopicFilter=items.map(q=>q[1]);
  document.getElementById("detailTitle").textContent="社会 ／ "+category;
@@ -773,7 +773,7 @@ function selectTopic(topic){
  document.getElementById("topicStage").classList.add("hidden");document.getElementById("formatStage").classList.remove("hidden");
 }
 function backToTopics(){currentTopic="";document.getElementById("formatStage").classList.add("hidden");document.getElementById("topicStage").classList.remove("hidden");document.getElementById("topicList").classList.remove("hidden")}
-function launchSelectedTopics(){const selected=[...document.querySelectorAll(".topic-pick:checked")].map(x=>x.value);if(!selected.length){alert("出題したい単元を選んでください。");return;}const items=all().filter(q=>(q[0]===currentSubject||((currentSubject==="技術"||currentSubject==="家庭")&&q[0]==="技術・家庭"))&&selected.includes(q[1]));if(!items.length){alert("この単元には問題がありません。");return;}window.quizDistractorPool=items;const possible=items.filter(q=>getDistractors(q,3).length===3);if(!possible.length){alert("4択に必要な選択肢が不足しています。問題を追加してください。");return;}currentTopic=selected.length+"単元ミックス";mode="quiz";window.quizDistractorPool=items;queue=shuffle(possible).slice(0,20);idx=0;correctCount=0;answeredCount=0;show("study");renderStudy();}
+function launchSelectedTopics(){const selected=[...document.querySelectorAll(".topic-pick:checked")].map(x=>x.value);if(!selected.length){alert("出題したい単元を選んでください。");return;}const items=all().filter(q=>(q[0]===currentSubject)&&selected.includes(q[1]));if(!items.length){alert("この単元には問題がありません。");return;}window.quizDistractorPool=items;const possible=items.filter(q=>getDistractors(q,3).length===3);if(!possible.length){alert("4択に必要な選択肢が不足しています。問題を追加してください。");return;}currentTopic=selected.length+"単元ミックス";mode="quiz";window.quizDistractorPool=items;queue=shuffle(possible).slice(0,20);idx=0;correctCount=0;answeredCount=0;show("study");renderStudy();}
 function launch(sub,topic,kind){
  window.quizDistractorPool=null;currentSubject=sub||currentSubject;currentTopic=topic;mode=kind;
  let items=all().filter(q=>(!sub||q[0]===sub||false)&&(!topic||q[1]===topic));if(!items.length){alert("この条件の問題はまだありません。");return;}
