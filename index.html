@@ -1102,7 +1102,7 @@ function renderTopicButtons(items){
  const topics=[...new Set(items.map(q=>q[1]))];
  document.getElementById("topicList").innerHTML=topics.map((t,i)=>{const qs=items.filter(q=>q[1]===t);return '<button class="topic" onclick="selectTopic('+arg(t)+')"><span class="topic-index">'+String(i+1).padStart(2,"0")+'</span><span class="topic-main"><b>'+escText(t)+'</b><span class="topic-meta">'+qs.length+'問</span></span><span class="topic-arrow">›</span></button>'}).join("");
  const mix=document.getElementById("multiTopicStage");
- if(mix)mix.innerHTML='<div class="multi-topic-head"><b>複数の単元を組み合わせる</b><span>選んだ単元を混ぜて出題</span></div><div class="multi-topic-options">'+topics.map(t=>'<label class="multi-topic-option"><input type="checkbox" class="topic-pick" value="'+escText(t)+'"><span>'+escText(t)+'</span></label>').join("")+'</div><button class="btn primary multi-topic-start" onclick="launchSelectedTopics()">選択した単元からランダム出題</button>';
+ if(mix)mix.innerHTML='<div class="multi-topic-head"><b>複数の単元を組み合わせる</b><span>選んだ単元を混ぜて出題</span></div><div class="multi-topic-options">'+topics.map(t=>'<label class="multi-topic-option"><input type="checkbox" class="topic-pick" value="'+escText(t)+'"><span>'+escText(t)+'</span></label>').join("")+'</div><p class="muted" style="margin:14px 0 5px">ミックス問題の出題数</p><div class="count-setting"><select id="mixQuestionCountSelect" class="field" aria-label="ミックス問題の出題数"><option value="5">5問</option><option value="10">10問</option><option value="15">15問</option><option value="20" selected>20問</option><option value="30">30問</option><option value="50">50問</option><option value="all">全問</option></select><small class="muted" id="mixQuestionCountHint">単元を選択すると出題可能数を表示します。</small></div><button class="btn primary multi-topic-start" onclick="launchSelectedTopics()">選択した単元からランダム出題</button>';
  document.getElementById("topicList").classList.remove("hidden");document.getElementById("topicStage").classList.remove("hidden");document.getElementById("formatStage").classList.add("hidden");
 }
 function openSubjectSection(branch){
@@ -1148,7 +1148,7 @@ function openSocialCategory(category){
  if(!items.length){document.getElementById("topicList").innerHTML='<p class="muted">この分野の問題はまだありません。</p>';document.getElementById("multiTopicStage").innerHTML="";document.getElementById("topicList").classList.remove("hidden");document.getElementById("topicStage").classList.remove("hidden");document.getElementById("formatStage").classList.add("hidden");return;}
  renderTopicButtons(items);
 }
-function selectedQuestionLimit(total){const el=document.getElementById("questionCountSelect");if(!el||el.value==="all")return total;const n=Math.max(1,parseInt(el.value,10)||20);return Math.min(n,total);}
+function selectedQuestionLimit(total,selectorId="questionCountSelect"){const el=document.getElementById(selectorId);if(!el||el.value==="all")return total;const n=Math.max(1,parseInt(el.value,10)||20);return Math.min(n,total);}
 function selectTopic(topic){
  currentTopic=topic;document.getElementById("selectedTopicTitle").textContent=topic;
  const items=questionsForCurrentBranch().filter(q=>q[1]===topic);
@@ -1167,7 +1167,7 @@ function selectTopic(topic){
  document.getElementById("topicStage").classList.add("hidden");document.getElementById("formatStage").classList.remove("hidden");
 }
 function backToTopics(){currentTopic="";document.getElementById("formatStage").classList.add("hidden");document.getElementById("topicStage").classList.remove("hidden");document.getElementById("topicList").classList.remove("hidden")}
-function launchSelectedTopics(){const selected=[...document.querySelectorAll(".topic-pick:checked")].map(x=>x.value);if(!selected.length){alert("出題したい単元を選んでください。");return;}const items=questionsForCurrentBranch().filter(q=>selected.includes(q[1]));if(!items.length){alert("この単元には問題がありません。");return;}window.quizDistractorPool=items;const possible=items.filter(q=>getDistractors(q,3).length===3);if(!possible.length){alert("4択に必要な選択肢が不足しています。問題を追加してください。");return;}currentTopic=selected.length+"単元ミックス";mode="quiz";window.quizDistractorPool=items;queue=shuffle(possible).slice(0,selectedQuestionLimit(possible.length));idx=0;correctCount=0;answeredCount=0;show("study");renderStudy();}
+function launchSelectedTopics(){const selected=[...document.querySelectorAll(".topic-pick:checked")].map(x=>x.value);if(!selected.length){alert("出題したい単元を選んでください。");return;}const items=questionsForCurrentBranch().filter(q=>selected.includes(q[1]));if(!items.length){alert("この単元には問題がありません。");return;}window.quizDistractorPool=items;const possible=items.filter(q=>getDistractors(q,3).length===3);if(!possible.length){alert("4択に必要な選択肢が不足しています。問題を追加してください。");return;}currentTopic=selected.length+"単元ミックス";mode="quiz";window.quizDistractorPool=items;queue=shuffle(possible).slice(0,selectedQuestionLimit(possible.length,"mixQuestionCountSelect"));idx=0;correctCount=0;answeredCount=0;show("study");renderStudy();}
 function launch(sub,topic,kind){
  currentSubject=sub||currentSubject;currentTopic=topic;mode=kind;
  // 分野を選択している間は、その分野の問題だけを出題・選択肢候補に使う。
