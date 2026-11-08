@@ -15,7 +15,7 @@ button,input{font:inherit}button{cursor:pointer;-webkit-tap-highlight-color:tran
 header{position:relative;overflow:hidden;background:linear-gradient(120deg,#ffe88e 0%,#fff0bd 58%,#fff8df 100%);padding:28px 22px 32px;margin:0 -18px 25px;border:0;border-radius:0 0 28px 28px;box-shadow:0 7px 24px rgba(125,95,18,.08)}
 header:after{content:"";position:absolute;width:155px;height:155px;border-radius:50%;right:-34px;top:-57px;background:rgba(255,255,255,.28)}
 .brand{position:relative;z-index:1;display:flex;align-items:center;font-size:10px;letter-spacing:.19em;font-weight:900;color:#715811}
-.brand-mark{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:11px;background:#fffdf5;color:#73570e;margin-right:9px;font-size:14px;box-shadow:0 3px 8px #8b6a1b18}
+.brand-icon{display:block;width:34px;height:34px;border-radius:11px;margin-right:9px;box-shadow:0 3px 8px #8b6a1b18}
 header h1{position:relative;z-index:1;font-size:clamp(29px,7vw,36px);font-weight:900;letter-spacing:.045em;line-height:1.25;margin:15px 0 5px}
 header p{position:relative;z-index:1;margin:0;color:#79652b;font-size:12px;font-weight:600;letter-spacing:.04em}
 .hidden{display:none!important}
@@ -77,10 +77,15 @@ header{padding:27px 22px 32px}header h1{font-size:30px;font-weight:850}header p{
 button:focus-visible,input:focus-visible{outline:3px solid #8b6900;outline-offset:3px}
 @media(max-width:390px){.app{padding:0 14px 36px}header{margin:0 -14px 18px;padding:23px 17px 27px}header h1{font-size:27px}.subject{padding:14px;min-height:133px}.panel{padding:16px}.choice{font-size:15px}}
 </style>
+<meta name="theme-color" content="#f5d45e">
+<meta name="description" content="中学3年生向けの副教科クイズ学習アプリ">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="manifest" href="manifest.webmanifest">
 </head>
 <body>
 <div class="app">
-<header><div class="brand"><span class="brand-mark">Q</span>STUDY / QUIZ</div><h1>副教科対策</h1><p>中学3年・定期テスト対策</p></header>
+<header><div class="brand"><img class="brand-icon" src="icon.svg" alt="">STUDY / QUIZ</div><h1>副教科対策</h1><p>中学3年・定期テスト対策</p></header>
 <main id="home" aria-label="教科選択">
  <div class="section-head"><h2>学習する教科</h2><small>01 / SUBJECT</small></div>
  <p class="muted home-lead">教科を選ぶと、単元と出題形式を選択できます。</p>
@@ -120,7 +125,7 @@ const subjects=[
 const base=[
 ["保健体育","感染症と予防","飛まつ感染","人のくしゃみや咳などの飛まつによって感染すること。"],
 ["保健体育","感染症と予防","経口感染","病原体がついた手で触った食品を口に入れることで感染すること。"],
-["保健体育","感染症と予防","空気感染","飛まつの水分が蒸発し、病原体が空気中に漂うことで感染すること。プリントでは感染力が強いと整理されている。"],
+["保健体育","感染症と予防","空気感染","飛まつの水分が蒸発し、病原体が空気中に漂うことで感染すること。"],
 ["保健体育","感染症と予防","感染症の広がりに関係する自然環境","温度・湿度。"],
 ["保健体育","感染症と予防","感染症の広がりに関係する社会環境","人口密度・交通・住居。"],
 ["保健体育","感染症と予防","性感染症とは","性的接触（臓器の粘膜、皮膚の傷口）によって感染すること。"],
@@ -129,7 +134,7 @@ const base=[
 ["保健体育","感染症と予防","性感染症の予防","性的接触を避けること、コンドームを正しく使用すること。"],
 ["保健体育","感染症と予防","エイズの原因となる病原体","HIV（ヒト免疫不全ウイルス）。"],
 ["保健体育","感染症と予防","エイズとは","HIV感染によって免疫力が低下し、感染症などにかかりやすくなった状態（後天性免疫不全症候群）。"],
-["保健体育","感染症と予防","HIVの感染経路としてプリントにあるもの","性的接触・母子感染・注射器具の共有。"],
+["保健体育","感染症と予防","HIVの主な感染経路を3つ挙げよう","性的接触・母子感染・注射器具の共有。"],
 ["保健体育","感染症と予防","医薬品の主作用","本来の使用目的である、病気の治療や予防に効果的な作用。"],
 ["保健体育","感染症と予防","医薬品の副作用","目的以外の好ましくない作用。体質や病気の状態などが関係する。"],
 ["保健体育","医薬品・保健医療","処方薬を他人に使ったり、残った薬を使ったりしてはいけない理由","個人の状態や体重に合わせて処方されており、健康に悪影響を及ぼすおそれがあるため。"],
@@ -151,7 +156,7 @@ const base=[
 ["技術","情報セキュリティ","フィルタリングとは","危険なキーワードやアドレスなどを識別し、問題のあるメール・Webページ・プログラムなどを制限すること。"],
 ["技術","情報セキュリティ","フィルタリングのデメリット","入手できる情報が少なくなること。"],
 ["技術","情報セキュリティ","認証システムとは","ユーザIDとパスワードなどを利用し、サービスを利用する人を限定したり、データを保護したりする仕組み。"],
-["技術","情報セキュリティ","生体認証とは","身体的な特徴などを利用して本人確認を行う認証技術。プリントでは認証システムと組み合わせて安全性を高めるとある。"],
+["技術","情報セキュリティ","生体認証とは","指紋や顔、声など、本人に固有の身体的特徴を使って本人確認を行う技術。"],
 ["技術","情報セキュリティ","暗号化とは","通信中にデータが流出しても、情報が読み取られないようにする技術。"],
 ["技術","双方向性・計測制御","双方向性とは","使用者の働きかけに応じて応対する機能。"],
 ["技術","双方向性・計測制御","コンテンツとは","文字・音声・静止画・動画などのメディアを、目的に応じて組み合わせて表現した情報。"],
@@ -188,16 +193,16 @@ const base=[
 ["家庭","消費者トラブル・権利と責任","消費者基本法の基本理念","消費者の権利の尊重と消費者の自立支援。"],
 ["家庭","消費者トラブル・権利と責任","商品選択で考えるニーズとウォンツ","本当に必要なもの（ニーズ）と、欲しいもの（ウォンツ）を分けて考える。"],
 ["家庭","消費者トラブル・権利と責任","商品選択のポイント","安全性・機能、価格、アフターサービス、環境への配慮。"],
-["家庭","中学生の自立・幼児の生活","プリントに記載されているこの単元の項目","中学生としての自立、幼い頃の振り返り、幼児の1日の生活、幼児の生活と遊び。詳細な説明はプリントに記載なし。"],
+["家庭","中学生の自立・幼児の生活","幼児の健やかな成長のために大切な生活習慣","十分な睡眠、バランスのよい食事、清潔を保つこと、遊びなどを通して生活リズムを整えること。"],
 ["美術","想像の世界・作品と作家","『記憶の固執』の作家","サルヴァドール・ダリ。"],
-["美術","想像の世界・作品と作家","『記憶の固執』で紹介されている手法","物質が持つ本来の性質を変容させる手法。一つの画像にもう一つの意味を重ねる手法。"],
+["美術","想像の世界・作品と作家","サルバドール・ダリの『記憶の固執』に見られる表現の特徴","時計が柔らかく溶けたように描かれ、現実とは異なる夢のような世界を表している。"],
 ["美術","想像の世界・作品と作家","『都会』の作家","松本竣介。"],
 ["美術","想像の世界・作品と作家","『都会』の表現の特徴","ビルや橋、女性など、いくつものイメージをコラージュするように重ね合わせて配置する。"],
 ["美術","想像の世界・作品と作家","『木立のあるリズミカルな風景の中のオランダ』の作家","パウル・クレー。"],
-["美術","想像の世界・作品と作家","パウル・クレーの作品についてプリントにある表現","音楽や親しみやすい人物、魚、鳥などを用いた叙情的な表現。"],
-["美術","仏像に込めた思い","仏教美術が盛んになった地域としてプリントにある場所","古代インド北西部のガンダーラ。"],
+["美術","想像の世界・作品と作家","パウル・クレーの作品に見られる表現の特徴","色や線、形を組み合わせ、音楽を思わせるリズムや詩情を感じさせる表現。"],
+["美術","仏像に込めた思い","ガンダーラ美術が栄えた地域","現在のパキスタン北西部からアフガニスタン東部にかけての地域。"],
 ["美術","仏像に込めた思い","ガンダーラ仏の特徴","彫りの深い顔立ちで、ギリシャ彫刻の影響を色濃く残す。"],
-["美術","仏像に込めた思い","仏像の手の表現に影響を受けた作家","高村光太郎。代表作として『手』が紹介されている。"],
+["美術","仏像に込めた思い","仏像の手の表現に関心を寄せた日本の彫刻家","高村光太郎。彫刻作品『手』などで、手の形や表情を表現した。"],
 ["美術","仏像に込めた思い","飛鳥時代の仏教美術","聖徳太子の仏教信仰と関係し、飛鳥を中心に展開した。"],
 ["美術","仏像に込めた思い","奈良時代の仏教美術","中国の文化が流入し、仏教美術の黄金時代とされる。"],
 ["美術","近代・現代の芸術表現","原始美術の特徴","祈りのための美術。土器・壁画・人形など。"],
@@ -212,8 +217,8 @@ const base=[
 ["美術","近代・現代の芸術表現","抽象芸術の特徴","具象的表現を排し、形・色・線によって純粋に構成する。"],
 ["美術","近代・現代の芸術表現","ダダイスムの特徴","反芸術・偶然性・無意味・風刺など。"],
 ["美術","近代・現代の芸術表現","シュルレアリスムの特徴","無意識・夢・自動筆記などによる超現実的な表現。"],
-["美術","近代・現代の芸術表現","現代芸術の祖として紹介されている人物","マルセル・デュシャン。"],
-["美術","近代・現代の芸術表現","デュシャンの代表作として紹介されている作品","『泉』。既製品の小便器を作品として提示したもの。"],
+["美術","近代・現代の芸術表現","既製品を作品として提示する手法で知られる芸術家","マルセル・デュシャン。"],
+["美術","近代・現代の芸術表現","マルセル・デュシャンが1917年に発表した作品","『泉』。既製品の小便器を作品として提示したもの。"],
 ["美術","近代・現代の芸術表現","コンセプチュアル・アートとは","既製品などを用い、作品のコンセプトやアイデアを重視する芸術。"],
 ["美術","近代・現代の芸術表現","ポップアートの特徴","大衆文化を題材にし、ハイアートと大衆芸術の境界を曖昧にした。"],
 ["美術","近代・現代の芸術表現","ランドアートの特徴","自然そのものを作品空間として用いる。アースアートともいう。"],
@@ -232,7 +237,7 @@ let custom=readStored("副教科_custom",[],Array.isArray);
 let progress=readStored("副教科_progress",{},v=>v&&typeof v==="object"&&!Array.isArray(v));
 let weak=readStored("副教科_weak",[],Array.isArray);
 let currentSubject="",currentTopic="",queue=[],idx=0,mode="",answered=false,flashRevealed=false;
-const all=()=>base.concat(custom);
+const all=()=>{const seen=new Set();return base.concat(custom).filter(q=>{const k=key(q);if(seen.has(k))return false;seen.add(k);return true;})};
 function save(){localStorage.setItem("副教科_custom",JSON.stringify(custom));localStorage.setItem("副教科_progress",JSON.stringify(progress));localStorage.setItem("副教科_weak",JSON.stringify(weak))}
 function show(id){["home","detail","study"].forEach(x=>{const e=document.getElementById(x);if(e)e.classList.toggle("hidden",x!==id)})}
 function goHome(){currentSubject="";currentTopic="";show("home");renderHome()}
@@ -347,8 +352,7 @@ function checkFill(){
  const close=expected.length>=8&&given.length>=8&&score.coverage>=.78&&score.precision>=.68&&score.dice>=.74;
  const ok=exact||close;answered=true;recordAnswer(ok,close&&!exact);
 }
-function next(){if(answered||mode==="flash"){}idx++;renderStudy();}
-renderHome();alert("復元しました！")}catch(err){alert("読み込めませんでした。副教科 TEST LAB のバックアップJSONを選んでください。")}};r.readAsText(f);e.target.value=""}
+function next(){idx++;renderStudy();}
 renderHome();
 </script>
 </body></html>
