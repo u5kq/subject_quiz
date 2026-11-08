@@ -18,24 +18,35 @@ header{background:linear-gradient(135deg,#ffe99a,#fff3c8);padding:25px 20px 31px
 @media(min-width:600px){.subjects{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:370px){.app{padding:0 13px 30px}header{margin:0 -13px 17px;padding:22px 17px 27px}.panel{padding:15px}}
 </style>
 <style id="readability">
-:root{--bg:#fffdf5;--ink:#242319;--muted:#555449;--line:#e5ddc7;--yellow:#f5cf4d;--yellow-deep:#775800;--pale:#fff3c5;--mint:#e8f2e7;--blue:#edf1ff;--pink:#fff0ec}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-size:16px;line-height:1.65;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif}
-.app{max-width:720px;padding:0 18px 42px}header{padding:28px 22px 31px}header h1{font-size:30px;letter-spacing:-.03em;font-weight:850}header p{font-size:14px;color:#5a4c26}
-.section-head{margin:24px 0 14px}.section-head h2,.section-head h3{font-size:19px;font-weight:800}.section-head small,.card-label{font-size:11px;color:#624a00;font-weight:850;letter-spacing:.12em}
-.subjects{gap:13px}.subject{min-height:140px;padding:17px;border:1px solid #ded6c0;border-radius:18px;background:#fff;box-shadow:0 4px 14px #4b3d130a}.subject .emoji{width:46px;height:46px;font-size:23px}.subject h3{font-size:17px;margin:11px 0 2px}.subject p{font-size:13px;color:#555449}.subject .count{font-size:12px;color:#604800}
-.panel{border:1px solid #ded6c0;border-radius:20px;padding:20px;background:#fff;box-shadow:0 4px 14px #4b3d130a}.back{font-size:14px;padding:11px 14px;background:#ffedaa;color:#4c3900;border:0;border-radius:11px;font-weight:750}
-#detailTitle{font-size:25px}.muted{font-size:14px;color:#555449}.topic-list{gap:11px}.topic{min-height:66px;padding:15px 16px;border:1px solid #ded6c0;border-radius:14px;background:#fff}.topic b{font-size:15px;color:#26251d}.topic span{font-size:13px;color:#555449}.topic .arrow{font-size:22px;color:#705400}
-#formatStage{margin-top:18px}.mode-grid{display:grid;grid-template-columns:1fr;gap:11px;margin-top:15px}
-.mode-card{width:100%;min-height:88px;display:grid;grid-template-columns:48px 1fr 20px;align-items:center;gap:13px;padding:15px 16px;border:1.5px solid #e0d8c2;border-radius:16px;background:#fff;text-align:left;color:var(--ink);box-shadow:0 3px 10px #45371008}
-.mode-card:active{transform:scale(.99);background:#fffaf0}.mode-featured{background:#fff6d8;border-color:#e8c64e}
-.mode-icon{display:grid;place-items:center;width:46px;height:46px;border-radius:14px;background:#fff0b6;color:#654b00;font-size:22px;font-weight:850}
-.mode-card:nth-child(2) .mode-icon{background:#eaf0ff;color:#40558d}.mode-card:nth-child(3) .mode-icon{background:#e9f4e9;color:#356743}.mode-card:nth-child(4) .mode-icon{background:#fff0e9;color:#92513b}.mode-card:nth-child(5) .mode-icon{background:#f2edff;color:#654b91}.mode-card:nth-child(6) .mode-icon{background:#e8f4f1;color:#356e62}
-.mode-copy{display:block;min-width:0}.mode-copy b{display:block;font-size:16px;line-height:1.35;font-weight:800}.mode-copy small{display:block;font-size:12px;color:#555449;line-height:1.5;margin-top:4px}.mode-copy em{display:block;font-style:normal;font-size:11px;color:#765b13;font-weight:750;margin-top:4px}.mode-arrow{font-size:23px;color:#8d7a48}
-.btn{font-size:14px;min-height:52px;padding:13px 15px;border:1px solid #ded6c0;border-radius:12px;background:#fff;color:var(--ink);font-weight:750}.btn.primary{background:#f3ca42;border-color:#d8b43e;color:#342800}
-.question{font-size:clamp(23px,5.5vw,29px);line-height:1.55;color:#222117;margin:22px 0}.choice{font-size:16px;line-height:1.65;min-height:60px;padding:15px 16px;border:1.5px solid #d6d0be;border-radius:14px;background:#fff;color:#29281f;text-align:left}
+:root{--bg:#fffdf7;--ink:#242319;--muted:#505148;--line:#ded8c4;--yellow:#f3c943;--dark:#604800;--pale:#fff1b8;--mint:#e4f2e5;--blue:#e8efff;--pink:#ffebe7}
+body{font-size:16px;color:var(--ink);line-height:1.7}.app{max-width:720px;padding:0 18px 40px}
+header{padding:27px 22px 32px}header h1{font-size:30px;font-weight:850}header p{font-size:14px;color:#5b4b20}
+.section-head h2,.section-head h3{font-size:19px}.section-head small,.card-label{font-size:11px;color:#5e4700}
+.subjects{gap:13px}.subject{min-height:140px;padding:17px;border-color:#d9d1b8;border-radius:18px;box-shadow:0 3px 10px #32280d0c}
+.subject .emoji{width:46px;height:46px;font-size:23px}.subject h3{font-size:17px;margin-top:11px}.subject p{font-size:13px;color:#505148}.subject .count{font-size:12px;color:#604800}
+.panel{border-color:#d9d1b8;border-radius:20px;padding:20px}.back{font-size:14px;padding:11px 14px;background:#ffedaa;color:#4c3900}
+#detailTitle{font-size:25px}.muted{font-size:14px;color:#505148}.topic-list{gap:11px}
+.topic{min-height:66px;padding:15px 16px;border-color:#d9d1b8;border-radius:14px}.topic b{font-size:15px;color:#26251d}.topic span{font-size:13px;color:#505148}.topic .arrow{font-size:22px;color:#705400}
+.mode-grid{gap:11px}.btn{font-size:14px;min-height:52px;padding:13px 15px;border-color:#d9d1b8}.mode-card{min-height:78px}.mode-card b{font-size:15px}.mode-card small{font-size:12px;color:#505148}
+.btn.primary{background:#f3c943;border-color:#d6ae2f;color:#302400}.btn.soft{background:#ffedaa;border-color:#e5cf7b;color:#4c3900}
+.question{font-size:clamp(23px,5.5vw,29px);line-height:1.55;color:#222117;margin:22px 0}
+.choice{font-size:16px;line-height:1.65;min-height:60px;padding:15px 16px;border-color:#d6d0be;border-radius:14px;color:#29281f}
 .choice.correct{background:#e2f2e5;border:2px solid #559a68;color:#174a26}.choice.wrong{background:#ffebe7;border:2px solid #c66a5e;color:#702b24}
-.answer{font-size:15px;line-height:1.8;background:#fff2bd;border:1px solid #e5cc70;color:#302800;border-radius:13px;padding:15px}.feedback{font-size:15px;line-height:1.7;padding:14px;border-radius:12px}
-.field{font-size:16px;min-height<script>
+.answer{font-size:15px;line-height:1.8;background:#fff2bd;border-color:#e5cc70;color:#302800}.feedback{font-size:15px;line-height:1.7;padding:14px}
+.field{font-size:16px;min-height:54px;border-color:#c9c2ae}.toolbar .btn{min-height:48px}
+button:focus-visible,input:focus-visible{outline:3px solid #8b6900;outline-offset:3px}
+@media(max-width:390px){.app{padding:0 14px 36px}header{margin:0 -14px 18px;padding:23px 17px 27px}header h1{font-size:27px}.subject{padding:14px;min-height:133px}.panel{padding:16px}.choice{font-size:15px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="brand"><span class="brand-mark">Q</span>STUDY / QUIZ</div><h1>副教科対策</h1><p>中学3年・定期テスト対策</p></header>
+<main id="home"><div class="section-head"><h2>教科を選択</h2><small>STEP 1</small></div><div class="subjects" id="subjects"></div></main>
+<section id="detail" class="hidden"><button class="back" onclick="goHome()">← 教科選択に戻る</button><div class="panel"><div class="card-label">STEP 2 / UNIT</div><h2 id="detailTitle"></h2><p class="muted" id="detailDesc"></p><div class="progress"><i id="subjectProgress"></i></div><div class="section-head"><h3>単元を選択</h3></div><div class="topic-list" id="topicList"></div><div id="formatStage" class="hidden"><button class="back" onclick="backToTopics()">← 単元選択に戻る</button><div class="section-head"><h3 id="selectedTopicTitle"></h3><small>STEP 3 / FORMAT</small></div><p class="muted">問題形式を選んでスタート。</p><div class="mode-grid" id="modeGrid"></div></div></div></section>
+<section id="study" class="hidden"><button class="back" onclick="backToDetail()">← 戻る</button><div class="panel"><div class="card-label" id="studyMode">PRACTICE</div><div class="muted" id="studyCount"></div><div class="progress"><i id="studyProgress"></i></div><div class="question" id="prompt"></div><div id="studyBody"></div><div class="toolbar" id="studyTools"></div></div></section>
+</div>
+<script>
+
 const subjects=[
  {name:"保健体育",emoji:"🏃",desc:"健康・安全とスポーツ",topics:["感染症と予防","医薬品・保健医療"]},
  {name:"技術",emoji:"⚙️",desc:"情報・技術とものづくり",topics:["情報モラル・知的財産権","情報セキュリティ","双方向性・計測制御"]},
@@ -267,17 +278,6 @@ function checkFill(){
  const close=expected.length>=8&&given.length>=8&&score.coverage>=.78&&score.precision>=.68&&score.dice>=.74;
  const ok=exact||close;answered=true;recordAnswer(ok,close&&!exact);
 }
-function markWeak(){const k=key(queue[idx]);if(!weak.includes(k)){weak.push(k);save();}const b=document.querySelector("#studyTools .soft");if(b)b.textContent="✓ 苦手登録済み";}
-function next(){idx++;renderStudy();}
-
-function openCustom(){show("custom");renderCustom()}
-function addCustom(){let s=document.getElementById("cSubject").value,t=document.getElementById("cTopic").value.trim(),q=document.getElementById("cQ").value.trim(),a=document.getElementById("cA").value.trim();if(!t||!q||!a){document.getElementById("customMsg").textContent="単元名・問題・答えをすべて入力してください。";return}custom.push([s,t,q,a]);save();["cTopic","cQ","cA"].forEach(id=>document.getElementById(id).value="");document.getElementById("customMsg").textContent="追加しました！";renderCustom();renderHome()}
-function renderCustom(){let el=document.getElementById("customList");el.innerHTML=custom.length?custom.map((q,i)=>`<div class="topic"><div><b>${q[2]}</b><div class="muted">${q[0]} / ${q[1]}</div></div><button class="btn danger" onclick="deleteCustom(${i})">削除</button></div>`).join(""):'<div class="empty">追加した問題はまだありません。</div>'}
-function deleteCustom(i){if(confirm("この問題を削除しますか？")){custom.splice(i,1);save();renderCustom();renderHome()}}
-function exportData(){let data={app:"副教科 TEST LAB",version:1,custom,progress,weak};let blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});let a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="副教科_TEST_LAB_backup.json";a.click();URL.revokeObjectURL(a.href)}
-function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let d=JSON.parse(r.result);if(!Array.isArray(d.custom)||!d.progress||!Array.isArray(d.weak))throw Error();if(!confirm("現在の学習データをバックアップ内容で置き換えますか？"))return;custom=d.custom;progress=d.progress;weak=d.weak;save();renderHome();alert("復元しました！")}catch(err){alert("読み込めませんでした。副教科 TEST LAB のバックアップJSONを選んでください。")}};r.readAsText(f);e.target.value=""}
-renderHome();
-</script>orm(input);const ok=a.includes(v)||v.includes(a);recordAnswer(ok);}
 function markWeak(){const k=key(queue[idx]);if(!weak.includes(k)){weak.push(k);save();}const b=document.querySelector("#studyTools .soft");if(b)b.textContent="✓ 苦手登録済み";}
 function next(){idx++;renderStudy();}
 
