@@ -49,14 +49,10 @@ label.muted{display:block;margin-top:7px}
 <div class="app">
 <header><div class="brand"><span class="brand-mark">Q</span>副教科 QUIZ</div><div class="header-note">いつでも使える学習ツール</div></header>
 <main id="home">
-<div class="section-head" style="margin-top:8px"><h2>教科を選択</h2></div>
-<div class="section-head"><h2>教科から学習する</h2><small>SUBJECTS</small></div>
-<div class="subjects" id="subjects"></div><div class="toolbar" style="margin-top:16px"><button class="btn soft" onclick="startWeak()">☆ 苦手を復習</button><button class="btn" onclick="openCustom()">問題を追加・管理</button><button class="btn" onclick="exportData()">保存</button><label class="btn file-label">復元<input type="file" accept="application/json" onchange="importData(event)" hidden></label></div>
-</main>
+<div class="section-head"><h2>教科を選択</h2></div>
+<div class="subjects" id="subjects"></div></main>
 <section id="detail" class="hidden"><button class="back" onclick="goHome()">← ホームに戻る</button><div class="panel"><div class="card-label">SUBJECT</div><h2 id="detailTitle"></h2><p class="muted" id="detailDesc"></p><div class="progress"><i id="subjectProgress"></i></div><div class="mode-grid" id="modeGrid"></div><div class="section-head"><h3>単元から選ぶ</h3><small>TOPICS</small></div><div class="topic-list" id="topicList"></div></div></section>
 <section id="study" class="hidden"><button class="back" onclick="backToDetail()">← 戻る</button><div class="panel"><div class="card-label" id="studyMode">PRACTICE</div><div class="muted" id="studyCount"></div><div class="progress"><i id="studyProgress"></i></div><div class="question" id="prompt"></div><div id="studyBody"></div><div class="toolbar" id="studyTools"></div></div></section>
-<section id="custom" class="hidden"><button class="back" onclick="goHome()">← ホームに戻る</button><div class="panel"><div class="card-label">CUSTOM CONTENT</div><h2>自分の問題を追加</h2><p class="muted">授業で強調された内容や、プリントの空欄を登録しよう。追加した内容も単語帳・4択に反映されます。</p><label class="muted">教科</label><select id="cSubject" class="field"><option>保健体育</option><option>技術</option><option>家庭</option><option>美術</option><option>音楽</option></select><label class="muted">単元名</label><input id="cTopic" class="field" placeholder="例：情報セキュリティ"><label class="muted">問題・用語</label><input id="cQ" class="field" placeholder="例：情報セキュリティの三要素は？"><label class="muted">答え</label><input id="cA" class="field" placeholder="例：機密性・完全性・可用性"><button class="btn primary" onclick="addCustom()">この問題を追加</button><div id="customMsg" class="muted"></div><hr style="border:0;border-top:1px solid var(--line);margin:20px 0"><h3 style="font-size:14px">自分で追加した問題</h3><div id="customList"></div></div></section>
-<footer>STUDY TOOL · 学習データはこの端末のブラウザ内に保存されます</footer>
 </div>
 <script>
 const subjects=[
