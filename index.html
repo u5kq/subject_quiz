@@ -1274,7 +1274,7 @@ function renderStudy(){
  tools.insertAdjacentHTML("beforeend",'<button class="btn" id="nextBtn" disabled onclick="next()">次の問題 →</button>');
 }
 function answerSimilarity(a,b){
- const norm=x=>String(x).normalize("NFKC").toLowerCase().replace(/[\\s、。，．・「」『』（）()【】［］:：;；!?！？]/g,"");
+ const norm=x=>String(x).normalize("NFKC").toLowerCase().replace(/[\s、。，．・「」『』（）()【】［］:：;；!?！？]/g,"");
  const x=norm(a),y=norm(b);if(!x||!y)return 0;
  const short=x.length<y.length?x:y,long=x.length<y.length?y:x;
  if(long.includes(short))return short.length/long.length;
@@ -1307,8 +1307,8 @@ function getDistractors(q,count){
  const source=Array.isArray(window.quizDistractorPool)?window.quizDistractorPool:all();
  const kind=quizQuestionKind(q),answerKind=quizAnswerKind(q);
  const pool=source.filter(x=>x[0]===q[0]&&x[2]!==q[2]&&x[3]!==q[3]&&quizQuestionKind(x)===kind&&quizAnswerKind(x)===answerKind);
- const unique=[],seen=new Set([String(q[3]).normalize("NFKC").replace(/\\s/g,"")]);
- for(const x of pool){const a=String(x[3]).trim(),k=a.normalize("NFKC").replace(/\\s/g,"");if(!a||seen.has(k))continue;seen.add(k);unique.push(x);}
+ const unique=[],seen=new Set([String(q[3]).normalize("NFKC").replace(/\s/g,"")]);
+ for(const x of pool){const a=String(x[3]).trim(),k=a.normalize("NFKC").replace(/\s/g,"");if(!a||seen.has(k))continue;seen.add(k);unique.push(x);}
  const sameTopic=shuffle(unique.filter(x=>x[1]===q[1]));
  const otherTopics=shuffle(unique.filter(x=>x[1]!==q[1]));
  const sortByLength=arr=>arr.sort((a,b)=>Math.abs(String(a[3]).length-String(q[3]).length)-Math.abs(String(b[3]).length-String(q[3]).length));
@@ -1319,7 +1319,7 @@ function getDistractors(q,count){
 function escText(v){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function englishCardWord(q){
  const prompt=String(q[2]||"").trim();
- const match=prompt.match(/^(.+?)\\s*の意味は[？?]?$/);
+ const match=prompt.match(/^(.+?)\s*の意味は[？?]?$/);
  if(match)return match[1].trim();
  if(/^[A-Za-z][A-Za-z -]*$/.test(prompt))return prompt;
  return prompt;
@@ -1339,7 +1339,7 @@ function buildQuestionExplanation(q){
  const question=String(q[2]||"").trim();
  const answer=String(q[3]||"").trim();
  const term=question.replace(/[？?。]+$/,"").replace(/とは$/,"").trim();
- const vocab=question.match(/^(.+?)\\s*の意味は[？?]?$/);
+ const vocab=question.match(/^(.+?)\s*の意味は[？?]?$/);
  if(vocab)return "「"+vocab[1].trim()+"」は「"+answer+"」という意味です。英語のつづりと日本語の意味をセットで覚えましょう。";
  if(/とは$/.test(question)||question===term){
   return "「"+term+"」とは、"+answer.replace(/[。]+$/,"")+"のことです。用語とその定義を結び付けて覚えましょう。";
@@ -1362,7 +1362,7 @@ function recordAnswer(ok,approximate=false){
 }
 function chooseOption(i){if(answered)return;answered=true;const ok=window.answerOptions[i]===window.answerCorrect;document.querySelectorAll(".choice").forEach((b,j)=>{b.disabled=true;if(window.answerOptions[j]===window.answerCorrect)b.classList.add("correct");});if(!ok)document.querySelectorAll(".choice")[i].classList.add("wrong");recordAnswer(ok);}
 function answerTF(v){if(answered)return;answered=true;document.querySelectorAll(".choice").forEach(b=>b.disabled=true);recordAnswer(v===window.tfCorrect);}
-function normalizeWritten(s){return String(s).toLowerCase().normalize("NFKC").replace(/[\\s　。、,.・「」『』（）()：:]/g,"").replace(/出来る/g,"できる").replace(/及び/g,"と");}
+function normalizeWritten(s){return String(s).toLowerCase().normalize("NFKC").replace(/[\s　。、,.・「」『』（）()：:]/g,"").replace(/出来る/g,"できる").replace(/及び/g,"と");}
 function writtenSimilarity(a,b){
  const grams=s=>{const out=[];for(let i=0;i<s.length-1;i++)out.push(s.slice(i,i+2));return new Set(out)};
  const A=grams(a),B=grams(b);if(!A.size||!B.size)return 0;
