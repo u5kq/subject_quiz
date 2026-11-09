@@ -259,7 +259,17 @@ button:focus-visible,input:focus-visible{outline:3px solid #777f84!important;out
 <main id="home" aria-label="教科選択">
  <div class="section-head"><h2>学習する教科</h2><small>01 / SUBJECT</small></div>
  <p class="muted home-lead">教科を選ぶと、単元と出題形式を選択できます。</p>
- <div class="subjects" id="subjects"></div>
+ <div class="subjects" id="subjects">
+  <button type="button" class="subject" data-subject="国語" onclick="openSubject('国語')"><div class="emoji">📖</div><h3>国語</h3><p>故郷・奥の細道・言葉の知識</p><div class="count">学習する →</div></button>
+  <button type="button" class="subject" data-subject="数学" onclick="openSubject('数学')"><div class="emoji">📐</div><h3>数学</h3><p>二次方程式・関数・相似・平方根</p><div class="count">学習する →</div></button>
+  <button type="button" class="subject" data-subject="英語" onclick="openSubject('英語')"><div class="emoji">A</div><h3>英語</h3><p>文法・英単語・Let’s Read2</p><div class="count">学習する →</div></button>
+  <button type="button" class="subject" data-subject="理科" onclick="openSubject('理科')"><div class="emoji">🔬</div><h3>理科</h3><p>生命の連続性・イオン</p><div class="count">学習する →</div></button>
+  <button type="button" class="subject" data-subject="社会" onclick="openSubject('社会')"><div class="emoji">🌏</div><h3>社会</h3><p>歴史・地理・公民</p><div class="count">学習する →</div></button>
+  <button type="button" class="subject" data-subject="保健体育" onclick="openSubject('保健体育')"><div class="emoji">🏃</div><h3>保健体育</h3><p>保健・体育・スポーツ</p><div class="count">学習する →</div></button>
+  <button type="button" class="subject" data-subject="技術・家庭" onclick="openSubject('技術・家庭')"><div class="emoji">⚙️</div><h3>技術・家庭</h3><p>情報・技術・生活と消費</p><div class="count">学習する →</div></button>
+  <button type="button" class="subject" data-subject="美術" onclick="openSubject('美術')"><div class="emoji">🎨</div><h3>美術</h3><p>美術・デザインと表現</p><div class="count">学習する →</div></button>
+  <button type="button" class="subject" data-subject="音楽" onclick="openSubject('音楽')"><div class="emoji">🎼</div><h3>音楽</h3><p>音楽の基礎・鑑賞・表現</p><div class="count">学習する →</div></button>
+ </div>
 </main>
 <section id="detail" class="hidden" aria-label="単元と出題形式">
  <button class="back" onclick="goHome()">← 教科選択</button>
