@@ -259,8 +259,7 @@ button:focus-visible,input:focus-visible{outline:3px solid #777f84!important;out
 <main id="home" aria-label="教科選択">
  <div class="section-head"><h2>学習する教科</h2><small>01 / SUBJECT</small></div>
  <p class="muted home-lead">教科を選ぶと、単元と出題形式を選択できます。</p>
- <div class="subjects" id="subjects">
-  <button type="button" class="subject" data-subject="国語" onclick="openSubject('国語')"><div class="emoji">📖</div><h3>国語</h3><p>故郷・奥の細道・言葉の知識</p><div class="count">学習する →</div></button>
+ <div class="subjects" id="subjects"></div><h3>国語</h3><p>故郷・奥の細道・言葉の知識</p><div class="count">学習する →</div></button>
   <button type="button" class="subject" data-subject="数学" onclick="openSubject('数学')"><div class="emoji">📐</div><h3>数学</h3><p>二次方程式・関数・相似・平方根</p><div class="count">学習する →</div></button>
   <button type="button" class="subject" data-subject="英語" onclick="openSubject('英語')"><div class="emoji">A</div><h3>英語</h3><p>文法・英単語・Let’s Read2</p><div class="count">学習する →</div></button>
   <button type="button" class="subject" data-subject="理科" onclick="openSubject('理科')"><div class="emoji">🔬</div><h3>理科</h3><p>生命の連続性・イオン</p><div class="count">学習する →</div></button>
@@ -1449,7 +1448,7 @@ function buildQuestionExplanation(q){
   if(/受動態/.test(topic)||/〜され|読まれ|壊され/.test(question))return "正解は「"+answer+"」です。受動態は be動詞＋過去分詞で「〜される」を表します。時制に合わせて be動詞を選び、動詞は過去分詞にします。";
   if(/現在完了|have|has/.test(topic)||/〜年間|ちょうど/.test(question))return "正解は「"+answer+"」です。現在完了は have/has＋過去分詞で作ります。継続には for/since、完了には just/already など、文の意味に合う語を使います。";
   if(/関係代名詞|分詞/.test(topic))return "正解は「"+answer+"」です。関係代名詞は前の名詞を説明し、現在分詞は「〜している」、過去分詞は「〜された」という意味で名詞を修飾します。";
-  if(/空欄|（|\\(/.test(question))return "正解は「"+answer+"」です。空欄の前後の語と日本語のヒントを確認し、文の意味・品詞・文法に合う語を選びます。";
+  if(/空欄|（|\(/.test(question))return "正解は「"+answer+"」です。空欄の前後の語と日本語のヒントを確認し、文の意味・品詞・文法に合う語を選びます。";
  }
  if(subject==="理科"){
   if(/陰極|陽極|電気分解/.test(question))return "正解は「"+answer+"」です。電気分解では、陽イオンは陰極へ、陰イオンは陽極へ移動します。電極で電子を受け取るか失うかを考えて生成物を判断します。";
