@@ -1208,7 +1208,10 @@ function selectTopic(topic){
  const items=questionsForCurrentBranch().filter(q=>q[1]===topic);
  const coreSubjects=["国語","数学","英語","理科","社会"];
  const isCore=coreSubjects.includes(currentSubject)||currentParentSubject==="社会";
- const modes=topic==="単語カード"
+ const isEnglishWords=currentSubject==="英語"&&items.some(q=>/[A-Za-z]{2,}/.test(String(q[2]||""))&&(/意味|訳/.test(String(q[2]||""))||String(q[2]||"").trim().match(/^[A-Za-z][A-Za-z -]*$/)));
+ const modes=isEnglishWords
+ ? [["flash-en-ja","英語 → 日本語","EN","英単語を見て日本語の意味を答える","順番は毎回ランダム"],["flash-ja-en","日本語 → 英語","JP","日本語を見て英単語を答える","順番は毎回ランダム"],["quiz","4択確認","A","4つの選択肢から正しい意味を選ぶ","覚えた内容をテスト"]]
+ : topic==="単語カード"
  ? [["flash","単語カード","▤","略称・用語を表から確認する","カードをめくって暗記"],["quiz","4択確認","A","4つの選択肢から正しい意味を選ぶ","覚えた内容をテスト"]]
  : isCore
  ? [["quiz","4択暗記","A","正しい答えを4つの選択肢から選ぶ","暗記・知識定着に集中"]]
@@ -1249,9 +1252,10 @@ function renderStudy(){
  const q=queue[idx];answered=false;flashRevealed=false;
  document.getElementById("studyMode").textContent=({random:"RANDOM Q&A",quiz:"4 CHOICE",tf:"TRUE / FALSE",fill:"FILL IN",flash:"FLASH CARD"})[mode]||"PRACTICE";
  document.getElementById("studyCount").textContent=(idx+1)+" / "+queue.length+"　・　"+q[0]+" / "+q[1];
- document.getElementById("prompt").textContent=q[2];tools.innerHTML='';
- let actual=mode;if(mode==="random")actual="flash";
- if(actual==="flash"){body.innerHTML='<div id="flashAnswer" class="answer hidden"></div><button class="btn primary" onclick="revealFlash()">答えを見る</button>';tools.insertAdjacentHTML("beforeend",'<button class="btn" onclick="next()">次の問題 →</button>');return;}
+ const englishWord=englishCardWord(q);
+ document.getElementById("prompt").textContent=mode==="flash-ja-en"?q[3]:(mode==="flash-en-ja"?englishWord:q[2]);tools.innerHTML='';
+ let actual=mode;if(mode==="random"||mode==="flash-en-ja"||mode==="flash-ja-en")actual="flash";
+ if(actual==="flash"){body.innerHTML='<div id="flashAnswer" class="answer hidden"></div><button class="btn primary" id="revealFlashBtn" onclick="revealFlash()">答えを見る</button>';tools.insertAdjacentHTML("beforeend",'<button class="btn" id="flashNextBtn" disabled onclick="next()">次の問題 →</button>');return;}
  if(actual==="quiz"){
   const distractors=getDistractors(q,3);
   const opts=shuffle([q[3],...distractors]);
@@ -1313,21 +1317,45 @@ function getDistractors(q,count){
  return selected.length===count?selected.map(x=>x[3]):[];
 }
 function escText(v){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
-function revealFlash(){const a=document.getElementById("flashAnswer");a.textContent=queue[idx][3];a.classList.remove("hidden");flashRevealed=true;}
+function englishCardWord(q){
+ const prompt=String(q[2]||"").trim();
+ const match=prompt.match(/^(.+?)\\s*の意味は[？?]?$/);
+ if(match)return match[1].trim();
+ if(/^[A-Za-z][A-Za-z -]*$/.test(prompt))return prompt;
+ return prompt;
+}
+function revealFlash(){
+ const q=queue[idx],a=document.getElementById("flashAnswer");
+ const answer=mode==="flash-ja-en"?englishCardWord(q):q[3];
+ a.innerHTML='<b>答え</b><br>'+escText(answer)+'<div class="feedback"><b>ポイント</b><br>'+escText(buildQuestionExplanation(q))+'</div>';
+ a.classList.remove("hidden");flashRevealed=true;
+ const reveal=document.getElementById("revealFlashBtn");if(reveal)reveal.disabled=true;
+ const nextButton=document.getElementById("flashNextBtn");if(nextButton)nextButton.disabled=false;
+}
 function buildQuestionExplanation(q){
  if(typeof q[5]==="string"&&q[5].trim())return q[5].trim();
+ const subject=String(q[0]||"");
  const topic=String(q[1]||"この単元");
- const question=String(q[2]||"");
- const answer=String(q[3]||"");
- const cleanQuestion=question.replace(/[？?。]+$/,"");
- return "ポイント：「"+topic+"」の学習内容です。問題文の「"+cleanQuestion+"」が何を尋ねているかを確認し、正解の「"+answer+"」とセットで覚えましょう。";
+ const question=String(q[2]||"").trim();
+ const answer=String(q[3]||"").trim();
+ const term=question.replace(/[？?。]+$/,"").replace(/とは$/,"").trim();
+ const vocab=question.match(/^(.+?)\\s*の意味は[？?]?$/);
+ if(vocab)return "「"+vocab[1].trim()+"」は「"+answer+"」という意味です。英語のつづりと日本語の意味をセットで覚えましょう。";
+ if(/とは$/.test(question)||question===term){
+  return "「"+term+"」とは、"+answer.replace(/[。]+$/,"")+"のことです。用語とその定義を結び付けて覚えましょう。";
+ }
+ if(answer.length>=18&&/[。．]$/.test(answer)){
+  return answer+" この説明に含まれる重要な語句に注目すると、正解の理由を理解しやすくなります。";
+ }
+ const focus=subject==="保健体育"?"体の働きや安全・健康との関係":subject==="技術"?"技術の仕組みと目的":subject==="家庭"?"生活の中での役割や選び方":subject==="美術"?"表現の特徴や用具・技法":subject==="音楽"?"音の特徴や表現方法":"この単元の重要語句";
+ return "ポイント：「"+topic+"」では、"+focus+"を理解することが大切です。正解の「"+answer+"」が問題文の問いにどう対応するかを確認しましょう。";
 }
 function recordAnswer(ok,approximate=false){
  const q=queue[idx];answeredCount++;if(ok)correctCount++;
  const counter=document.getElementById("studyCount");if(counter)counter.textContent=(idx+1)+" / "+queue.length+"　・　正解 "+correctCount+" / "+answeredCount;
  const el=document.getElementById("feedback");
  if(el){
-  const explanation=ok?"":'<div class="feedback bad"><b>かんたん解説</b><br>'+escText(buildQuestionExplanation(q))+'</div>';
+  const explanation='<div class="feedback"><b>かんたん解説</b><br>'+escText(buildQuestionExplanation(q))+'</div>';
   el.innerHTML='<div class="feedback '+(ok?'good':'bad')+'">'+(ok?(approximate?'正解！（表現の違いを考慮）':'正解！'):'不正解。答えを確認しよう。')+'<br><b>正解：</b>'+escText(q[3])+'</div>'+explanation;
  }
  const n=document.getElementById("nextBtn");if(n)n.disabled=false;
