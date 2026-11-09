@@ -1299,7 +1299,7 @@ function launch(sub,topic,kind){
  currentSubject=sub||currentSubject;currentTopic=topic;mode=kind;
  // 分野を選択している間は、その分野の問題だけを出題・選択肢候補に使う。
  let items=questionsForCurrentBranch().filter(q=>(!topic||q[1]===topic));
- if(kind==="vocab-flash")items=items.filter(q=>isVocabularyItem(q));
+ if(kind==="vocab-flash"||((kind==="flash-en-ja"||kind==="flash-ja-en")&&currentSubject==="英語"))items=items.filter(q=>isVocabularyItem(q));
  if(!items.length){alert("この分野・単元には問題がありません。");return;}
  window.quizDistractorPool=items.slice();
  if(kind==="quiz"){items=items.filter(q=>getDistractors(q,3).length===3);if(!items.length){alert("この分野内で4択を作れる問題がまだありません。");return;}}
