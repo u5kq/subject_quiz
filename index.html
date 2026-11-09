@@ -1275,7 +1275,9 @@ function selectTopic(topic){
  const isCore=coreSubjects.includes(currentSubject)||currentParentSubject==="社会";
  const vocabItems=items.filter(q=>isVocabularyItem(q));
  const hasVocab=(currentSubject==="数学"||currentSubject==="英語")&&vocabItems.length>0;
- const modes=hasVocab
+ const modes=hasVocab&&currentSubject==="英語"
+ ? [["flash-en-ja","英語 → 日本語","EN","英単語を見て日本語の意味を覚える","順番は毎回ランダム"],["flash-ja-en","日本語 → 英語","JP","日本語を見て英単語を思い出す","順番は毎回ランダム"],["quiz","問題演習","A","この単元の問題で理解度を確認","4択で演習"]]
+ : hasVocab
  ? [["vocab-flash","単語・用語を覚える","▤","この単元の重要語句をカードで暗記","出題順はランダム"],["quiz","問題演習","A","この単元の問題で理解度を確認","4択で演習"]]
  : topic==="単語カード"
  ? [["flash","単語カード","▤","略称・用語を表から確認する","カードをめくって暗記"],["quiz","4択確認","A","4つの選択肢から正しい意味を選ぶ","覚えた内容をテスト"]]
@@ -1322,7 +1324,7 @@ function renderStudy(){
  document.getElementById("studyCount").textContent=(idx+1)+" / "+queue.length+"　・　"+q[0]+" / "+q[1];
  const englishWord=englishCardWord(q);
  document.getElementById("prompt").textContent=mode==="flash-ja-en"?q[3]:(mode==="flash-en-ja"?englishWord:q[2]);tools.innerHTML='';
- let actual=mode;if(mode==="random"||mode==="flash-en-ja"||mode==="flash-ja-en")actual="flash";
+ let actual=mode;if(mode==="random"||mode==="flash-en-ja"||mode==="flash-ja-en"||mode==="vocab-flash")actual="flash";
  if(actual==="flash"){body.innerHTML='<div id="flashAnswer" class="answer hidden"></div><button class="btn primary" id="revealFlashBtn" onclick="revealFlash()">答えを見る</button>';tools.insertAdjacentHTML("beforeend",'<button class="btn" id="flashNextBtn" disabled onclick="next()">次の問題 →</button>');return;}
  if(actual==="quiz"){
   const distractors=getDistractors(q,3);
