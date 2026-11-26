@@ -1864,4 +1864,63 @@ button,input,select{touch-action:manipulation}
 @media (max-width:599px){.app{width:calc(100% - 24px)}.subjects{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.topic-list{grid-template-columns:minmax(0,1fr)}.panel{padding:17px}}
 @media (pointer:coarse){button,.subject,.topic{touch-action:manipulation}}
 </style>
+
+<style id="mobile-subject-card-alignment">
+/* Smartphone: align all nine subject cards into consistent two-column tiles */
+@media (max-width:599px){
+  #subjects{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    grid-auto-rows:1fr;
+    align-items:stretch;
+    gap:10px!important;
+  }
+  #subjects .subject{
+    display:flex!important;
+    flex-direction:column;
+    align-items:flex-start;
+    width:100%;
+    min-width:0;
+    height:100%;
+    min-height:154px;
+    padding:14px!important;
+    border:1px solid #dfe2e3!important;
+    border-top:4px solid var(--subject-color)!important;
+    border-radius:15px!important;
+    box-sizing:border-box;
+    text-align:left;
+    overflow:hidden;
+  }
+  #subjects .subject .emoji{flex:0 0 38px;width:38px;height:38px}
+  #subjects .subject h3{
+    display:block;
+    width:100%;
+    min-width:0;
+    margin:9px 0 3px!important;
+    font-size:15px!important;
+    line-height:1.4;
+    overflow-wrap:anywhere;
+  }
+  #subjects .subject p{
+    display:-webkit-box;
+    width:100%;
+    min-width:0;
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:2;
+    overflow:hidden;
+    line-height:1.45;
+    min-height:2.9em;
+    font-size:11px!important;
+  }
+  #subjects .subject .count{
+    display:block;
+    width:100%;
+    margin-top:auto!important;
+    padding-top:8px;
+    font-size:10px!important;
+    line-height:1.35;
+  }
+}
+</style>
+
 </body></html>
